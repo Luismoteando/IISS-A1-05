@@ -5,7 +5,7 @@ public class Action {
 	private int northSand, westSand, eastSand, southSand;
 	private Movement moves;
 	private static List<Action> actions = new ArrayList<Action>();
-	
+
 
 	public Action(int northSand, int westSand, int eastSand, int southSand) {
 		this.northSand = northSand;
@@ -18,7 +18,7 @@ public class Action {
 		this.moves = moves;
 		Action.actions = action;
 	}
-	
+
 	public static void generateActions(Tractor t, Field f, Movement m){
 		int[] elementos = possibilities(t, f);
 		int n = 4;                  //Tipos para escoger
@@ -48,7 +48,7 @@ public class Action {
 	public static int[] possibilities(Tractor t, Field f){
 		int difference;
 		difference = f.getDifference(t);
-		
+
 		if(f.getField()[t.getX()][t.getY()] < f.getK()){
 			System.out.println("Trying to move sand from a box that is lesser than 'k' (The desired quantity)");
 			System.exit(0);
@@ -72,98 +72,96 @@ public class Action {
 
 		integer = integer/10;
 		comb[0] = integer%10;
-		
+
 		return comb;
 	}
-	
+
 	public static boolean validActions(int[] next, Field f, Tractor t, Movement m){
 		int difference = f.getDifference(t);		
-		
+
 		if((next[0] + next[1] + next[2] + next[3]) != difference)
 			return false;
 		//metodo para comprobar el maximo (cogemos los metodos get de los movimientos y vemos si su valor supera el maximo)
 		//if()
 		if(!f.checkSuccessors(next, t, m))
 			return false;
-		
+
 		return true;		
 	}
 	public static  List<Action> actionsWithMovements(Movement m, Tractor t, Field f){
-		/*Este metodo tiene que guardar todo en una misma lista, porque ahora mismo
-		 * sobreescribe la lista por cada posible descendiente. Deberia guardar todos los
-		 * descendientes con las diferentes combinaciones*/
 		List<Action> actionsWithMoves = new ArrayList<Action>();
 		Action action = null;
 		int[] moves = new int[2];
 		Movement mv;
 		System.out.println("\nThe list containing the valid actions is:");
-		
+
 		if(t.getX() != 0){			
 			moves[0] = m.getNorthMovement(t)[0];
 			moves[1] = m.getNorthMovement(t)[1];
 			mv = new Movement(moves);
 			action = new Action(mv, actions);
 			actionsWithMoves.add(action);
-			tryActions(m, mv, actions, f, t);
-			
+
 		}if(t.getY() != 0){
 			moves[0] = m.getWestMovement(t)[0];
 			moves[1] = m.getWestMovement(t)[1];			
 			mv = new Movement(moves);
 			action = new Action(mv, actions);
 			actionsWithMoves.add(action);
-			tryActions(m, mv, actions, f, t);
-			
+
 		}if(t.getY() != f.getColumn() - 1){
 			moves[0] = m.getEastMovement(t, f)[0];
 			moves[1] = m.getEastMovement(t, f)[1];
 			mv = new Movement(moves);
 			action = new Action(mv, actions);
 			actionsWithMoves.add(action);
-			tryActions(m, mv, actions, f, t);
-			
+
 		}if(t.getX() != f.getRow() - 1){
 			moves[0] = m.getSouthMovement(t, f)[0];
 			moves[1] = m.getSouthMovement(t, f)[1];
 			mv = new Movement(moves);
 			action = new Action(mv, actions);
 			actionsWithMoves.add(action);
-			tryActions(m, mv, actions, f, t);
 		}		
 		printActions(actionsWithMoves);	
-		
+		tryActions(m, actionsWithMoves, f, t);
 		return actionsWithMoves;		
 	}
-	
-	public static void tryActions(Movement m, Movement mv, List<Action> a, Field f, Tractor t){
-		Action aux;
+
+	public static void tryActions(Movement m, List<Action> a, Field f, Tractor t){
+		Action aux, ac;
+		Movement mv;
 		for(int i = 0; i < a.size(); i++){
-			int[][] possible = createPossibleField(f);
-			possible[t.getX()][t.getY()] = possible[t.getX()][t.getY()] - f.getDifference(t);
 			aux = a.get(i);
-			if(aux.getNorthSand() != 0)
-				possible[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]] = possible[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]] + aux.getNorthSand();		
-				
-			if(aux.getWestSand() != 0)
-				possible[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]] = possible[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]] + aux.getWestSand();	
-				
-			if(aux.getEastSand() != 0)
-				possible[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]] = possible[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]] + aux.getEastSand();
-				
-			if(aux.getSouthSand() != 0)
-				possible[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]] = possible[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]] + aux.getSouthSand();
-			
-			System.out.println(mv.toString());
-			for(int x = 0; x < possible.length; x++){
-				for(int y = 0; y < possible[x].length; y++){
-					System.out.print("|" + possible[x][y]);
+			mv = aux.getMoves();
+			for(int j = 0; j < aux.getActions().size(); j++){
+				int[][] possible = createPossibleField(f);
+				possible[t.getX()][t.getY()] = possible[t.getX()][t.getY()] - f.getDifference(t);
+				ac = aux.getActions().get(j);
+				if(ac.getNorthSand() != 0)
+					possible[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]] = possible[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]] + ac.getNorthSand();		
+
+				if(ac.getWestSand() != 0)
+					possible[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]] = possible[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]] + ac.getWestSand();	
+
+				if(ac.getEastSand() != 0)
+					possible[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]] = possible[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]] + ac.getEastSand();
+
+				if(ac.getSouthSand() != 0)
+					possible[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]] = possible[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]] + ac.getSouthSand();
+
+				System.out.println(mv.toString());
+				for(int x = 0; x < possible.length; x++){
+					for(int y = 0; y < possible[x].length; y++){
+						System.out.print("|" + possible[x][y]);
+					}
+					System.out.print("|\n");
 				}
-				System.out.print("|\n");
 			}
 		}//end for
 		System.out.print("\n");		
 	}
-	
+
 	public static int[][] createPossibleField(Field f){
 		int[][] possible = new int[f.getField().length][f.getField().length];
 		for(int x = 0; x < f.getField().length; x++){
@@ -173,7 +171,7 @@ public class Action {
 		}
 		return possible;
 	}
-	
+
 	public int getNorthSand() {
 		return northSand;
 	}
@@ -214,7 +212,7 @@ public class Action {
 		this.moves = moves;
 	}
 
-	public static List<Action> getActions() {
+	public List<Action> getActions() {
 		return actions;
 	}
 
@@ -224,7 +222,7 @@ public class Action {
 
 	public static void printActions(List<Action> actionsWithMoves){
 		for(int i = 0; i < actionsWithMoves.size(); i++)
-			  System.out.println(actionsWithMoves.get(i).printWithMoves() + "\n");
+			System.out.println(actionsWithMoves.get(i).printWithMoves() + "\n");
 	}
 
 	@Override
