@@ -2,35 +2,53 @@ import java.util.*;
 
 public class Frontier {
 	
-	LinkedList<Node> frontier;
+	LinkedList<Node> frontierList;
+	PriorityQueue<Node> frontierQueue;
 	
-	public void createFrontier(){
-		frontier = new LinkedList<Node>();
+	///////////////////////////////List part//////////////////////////////
+	public void createFrontierList(){
+		frontierList = new LinkedList<Node>();
 	}
 	
-	public LinkedList<Node> insert(Node node){
-		if (frontier.get(0) == null){
-			frontier.addFirst(node);
+	public LinkedList<Node> insertInList(Node node){
+		if (frontierList.get(0) == null){
+			frontierList.addFirst(node);
 		}else{
-			for(int i=0; i<frontier.size(); i++){
-				if (frontier.get(i).getValue() < node.getValue()){
+			for(int i=0; i<frontierList.size(); i++){
+				if (frontierList.get(i).getValue() < node.getValue()){
 					continue;
 				}
 				else{
-					frontier.add(i, node);				
+					frontierList.add(i, node);				
 				}
 			}
 		}		
-		return frontier;
+		return frontierList;
 	}
 	
 	public void removeFirst(){
-		frontier.removeFirst();
+		frontierList.removeFirst();
 	}
 	
-	public boolean isEmpty(){
-		return frontier.isEmpty();
+	public boolean isEmptyList(){
+		return frontierList.isEmpty();
 	}
 	
-
+	///////////////////////////Queue part////////////////////////////////
+	
+	public void createFrontierQueue(){
+		frontierQueue = new PriorityQueue<Node>();
+	}
+	
+	public void insertInQueue(Node node){	
+		frontierQueue.add(node);
+	}
+	
+	public void removeFirstFromQueue(){
+		frontierQueue.remove();
+	}
+	
+	public boolean isEmptyQueue(){
+		return frontierQueue.isEmpty();
+	}
 }
