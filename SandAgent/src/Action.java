@@ -91,41 +91,33 @@ public class Action {
 	public static  List<Action> actionsWithMovements(Movement m, Tractor t, Field f){
 		List<Action> actionsWithMoves = new ArrayList<Action>();
 		Action action = null;
-		int[] moves = new int[2];
-		Movement mv;
+		Movement mv = null;
 		System.out.println("\nThe list containing the valid actions is:");
 
-		if(t.getX() != 0){			
-			moves[0] = m.getNorthMovement(t)[0];
-			moves[1] = m.getNorthMovement(t)[1];
-			mv = new Movement(moves);
-			action = new Action(mv, actions);
-			actionsWithMoves.add(action);
+		if(t.getX() != 0){
+			actionsWithMoves.add(actionsForEachMovement(mv, m.getNorthMovement(t)[0], m.getNorthMovement(t)[1], action, actionsWithMoves));
 
 		}if(t.getY() != 0){
-			moves[0] = m.getWestMovement(t)[0];
-			moves[1] = m.getWestMovement(t)[1];			
-			mv = new Movement(moves);
-			action = new Action(mv, actions);
-			actionsWithMoves.add(action);
+			actionsWithMoves.add(actionsForEachMovement(mv, m.getWestMovement(t)[0], m.getWestMovement(t)[1], action, actionsWithMoves));
 
 		}if(t.getY() != f.getColumn() - 1){
-			moves[0] = m.getEastMovement(t, f)[0];
-			moves[1] = m.getEastMovement(t, f)[1];
-			mv = new Movement(moves);
-			action = new Action(mv, actions);
-			actionsWithMoves.add(action);
+			actionsWithMoves.add(actionsForEachMovement(mv, m.getEastMovement(t, f)[0], m.getEastMovement(t, f)[1], action, actionsWithMoves));
 
 		}if(t.getX() != f.getRow() - 1){
-			moves[0] = m.getSouthMovement(t, f)[0];
-			moves[1] = m.getSouthMovement(t, f)[1];
-			mv = new Movement(moves);
-			action = new Action(mv, actions);
-			actionsWithMoves.add(action);
+			actionsWithMoves.add(actionsForEachMovement(mv, m.getSouthMovement(t, f)[0], m.getSouthMovement(t, f)[1], action, actionsWithMoves));
 		}		
 		printActions(actionsWithMoves);	
 		tryActions(m, actionsWithMoves, f, t);
 		return actionsWithMoves;		
+	}
+	
+	public static Action actionsForEachMovement(Movement mv, int hor, int ver, Action action, List<Action> actionsWithMoves){
+		int[] moves = new int[2];
+		moves[0] = hor;
+		moves[1] = ver;
+		mv = new Movement(moves);
+		action = new Action(mv, actions);		
+		return action;		
 	}
 
 	public static void tryActions(Movement m, List<Action> a, Field f, Tractor t){
