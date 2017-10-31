@@ -52,6 +52,14 @@ public class Movement {
 		return southSuccessor;
 	}
 	
+	public int getVertical() {
+		return vertical;
+	}
+
+	public int getHorizontal() {
+		return horizontal;
+	}
+
 	@Override
 	public String toString() {
 		return "Movement [" + vertical + ", " + horizontal + "]";

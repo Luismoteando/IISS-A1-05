@@ -1,20 +1,31 @@
 import java.util.Random;
 
-public class Node {
-
+public class Node implements Comparable<Node>{
+	
 	Field state;
 	int cost, depth, value;
+	Node parent;
 	Random rn = new Random();
 	
-	public Node(Field state, int cost, int depth, Action action /*int value (de momento este valor es random*/) {
+	public Node(Field state){
+		this.state = state;
+	}
+	
+	public Node(Node parent, Field state, int cost, int depth, Action action) {
+		this.parent = parent;
 		this.state = state;
 		this.cost = cost;
 		this.depth = depth;
 		this.value = rn.nextInt(1000);
 		this.action = action;
 	}
-	public Node(){
-		this.value = rn.nextInt(1000);
+	
+	public int compareTo(Node node){
+		if(this.getValue() < node.getValue())
+			return -1;
+		if(this.getValue() > node.getValue())
+			return 1;
+		return 0;		
 	}
 	
 	public Field getState() {

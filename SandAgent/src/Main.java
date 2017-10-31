@@ -19,7 +19,6 @@ public class Main {
 		storeValues();
 
 		if(field.length != row || field[0].length != column){
-			//We still have to control if there're more squares in the field
 			System.out.println("The length of the field doesn't correspond to the number of columns or rows");
 			System.exit(0);
 		}//end if
@@ -37,9 +36,9 @@ public class Main {
 		printSand();
 		Action.generateActions(t, f, m);
 		actionsWithMoves = Action.actionsWithMovements(m, t, f);
-		f.isGoal();
-		Node n = new Node();
-		System.out.println(n.getValue());
+//		f.isGoal();
+//		Node n = new Node();
+//		System.out.println(n.getValue());
 //		System.out.println("\nRandom action selected\n" + generateRandom());
 
 	}//end main
@@ -101,19 +100,13 @@ public class Main {
 		if(x != row - 1)
 			System.out.println("South: " + "[" + m.getSouthMovement(t, f)[0] + ", " + m.getSouthMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]]);
 	}//end printSand
-
 	
-//	public static Action generateRandom(){
-//		Action a;
-//		int index;
-//		List<Action> ma;
-//		randomGenerator = new Random();
-//		ma = actionsWithMovements();
-//		index = randomGenerator.nextInt(ma.size());
-//		a = ma.get(index);
-//		return a;
-//	}
-
+	public void nodesOrderedList(){
+		Node parent = new Node(f);
+		Frontier front = new Frontier();
+		front.createFrontierList();
+		
+	}
 
 }//end Main
 

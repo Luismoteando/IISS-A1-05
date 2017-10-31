@@ -88,6 +88,7 @@ public class Action {
 
 		return true;		
 	}
+	
 	public static  List<Action> actionsWithMovements(Movement m, Tractor t, Field f){
 		List<Action> actionsWithMoves = new ArrayList<Action>();
 		Action action = null;
@@ -106,8 +107,7 @@ public class Action {
 		}if(t.getX() != f.getRow() - 1){
 			actionsWithMoves.add(actionsForEachMovement(mv, m.getSouthMovement(t, f)[0], m.getSouthMovement(t, f)[1], action, actionsWithMoves));
 		}		
-		printActions(actionsWithMoves);	
-		tryActions(m, actionsWithMoves, f, t);
+		printActions(actionsWithMoves);
 		return actionsWithMoves;		
 	}
 	
@@ -120,27 +120,32 @@ public class Action {
 		return action;		
 	}
 
-	public static void tryActions(Movement m, List<Action> a, Field f, Tractor t){
-		Action aux, ac;
+	public static List<Field> tryActions(Movement m, List<Action> a, Field f, Tractor t){
+		Action auxAction, act;
 		Movement mv;
+		List<Field> fieldList= new ArrayList<Field>();
+		Field auxField;
 		for(int i = 0; i < a.size(); i++){
-			aux = a.get(i);
-			mv = aux.getMoves();
-			for(int j = 0; j < aux.getActions().size(); j++){
+			auxAction = a.get(i);
+			mv = auxAction.getMoves();
+			for(int j = 0; j < auxAction.getActions().size(); j++){
 				int[][] possible = createPossibleField(f);
 				possible[t.getX()][t.getY()] = possible[t.getX()][t.getY()] - f.getDifference(t);
-				ac = aux.getActions().get(j);
-				if(ac.getNorthSand() != 0)
-					possible[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]] = possible[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]] + ac.getNorthSand();		
+				act = auxAction.getActions().get(j);
+				if(act.getNorthSand() != 0)
+					possible[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]] = possible[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]] + act.getNorthSand();		
 
-				if(ac.getWestSand() != 0)
-					possible[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]] = possible[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]] + ac.getWestSand();	
+				if(act.getWestSand() != 0)
+					possible[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]] = possible[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]] + act.getWestSand();	
 
-				if(ac.getEastSand() != 0)
-					possible[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]] = possible[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]] + ac.getEastSand();
+				if(act.getEastSand() != 0)
+					possible[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]] = possible[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]] + act.getEastSand();
 
-				if(ac.getSouthSand() != 0)
-					possible[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]] = possible[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]] + ac.getSouthSand();
+				if(act.getSouthSand() != 0)
+					possible[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]] = possible[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]] + act.getSouthSand();
+				
+				auxField = new Field(mv.getHorizontal(), mv.getVertical(), possible, f.getK(), f.getMax());
+				fieldList.add(auxField);
 
 				System.out.println(mv.toString());
 				for(int x = 0; x < possible.length; x++){
@@ -151,7 +156,26 @@ public class Action {
 				}
 			}
 		}//end for
-		System.out.print("\n");		
+		System.out.print("\n");
+		
+		return fieldList;		
+	}
+	
+	public List<Node> successors(Node parent, Movement m, Tractor t, Field f){
+		List<Action> actionList = actionsWithMovements(m, t, f);
+		List<Node> successors = new ArrayList<Node>();
+		List<Field> fieldList = tryActions(m, actionList, f, t);
+		Action auxAction;
+		Node node;
+		Field auxField;
+		for(int i = 0; i < actionList.size(); i++){
+			auxAction = actionList.get(i);
+			auxField = fieldList.get(i);
+			node = new Node(parent, auxField, parent.getCost() + 1, parent.getDepth() + 1, auxAction);
+			successors.add(node);			
+		}
+		
+		return successors;	
 	}
 
 	public static int[][] createPossibleField(Field f){
