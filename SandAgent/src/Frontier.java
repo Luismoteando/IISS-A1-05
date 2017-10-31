@@ -5,7 +5,7 @@ public class Frontier {
 	LinkedList<Node> frontierList;
 	PriorityQueue<Node> frontierQueue;
 	
-	///////////////////////////////List part//////////////////////////////
+	///////////////////////////////List part///////////////////////////////
 	public void createFrontierList(){
 		frontierList = new LinkedList<Node>();
 	}
