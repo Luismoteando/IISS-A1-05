@@ -1,12 +1,13 @@
 import java.util.Random;
 
 public class Node implements Comparable<Node>{
-	
-	Field state;
-	int cost, depth, value;
+
 	Node parent;
+	Field state;
+	Action action;
+	int cost, depth, value;
 	Random rn = new Random();
-	
+
 	public Node(Field state){
 		this.state = state;
 	}
@@ -57,8 +58,16 @@ public class Node implements Comparable<Node>{
 	}
 	public void setAction(Action action) {
 		this.action = action;
+	}	
+	
+	public String toString() {
+		return "\nNode [state=" + state.toString() + ", action=" + action.toString() + ", cost=" + cost + ", depth=" + depth + ", value="
+				+ value + "]";
 	}
-	//Qué es esto?
-	Action action;
+	
+	public String toString2(){
+		return "----------\nState = \n" + state.toString2() + action.toString() + "\nCost = " + cost + "\nDepth = " + depth + "\nValue = "
+				+ value + "\n----------\n";
+	}
 	
 }

@@ -35,7 +35,8 @@ public class Main {
 		m = new Movement(prueba);
 		printSand();
 		Action.generateActions(t, f, m);
-		actionsWithMoves = Action.actionsWithMovements(m, t, f);
+		nodesOrderedList();
+//		actionsWithMoves = Action.actionsWithMovements(m, t, f);
 //		f.isGoal();
 //		Node n = new Node();
 //		System.out.println(n.getValue());
@@ -101,12 +102,31 @@ public class Main {
 			System.out.println("South: " + "[" + m.getSouthMovement(t, f)[0] + ", " + m.getSouthMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]]);
 	}//end printSand
 	
-	public void nodesOrderedList(){
+	public static void nodesOrderedList(){
+		Long initialTime, finalTime;
+//		int[][] fieldSuccessors;
 		Node parent = new Node(f);
+		Node auxNode;
+//		Field auxField;
 		Frontier front = new Frontier();
+		Action action = new Action();
+		List<Node> actionList;
+		List<Node> frontierList;
 		front.createFrontierList();
+		actionList = action.successors(parent, m, t, f);
 		
+		initialTime = System.nanoTime();
+		for(int i = 0; i < actionList.size(); i++){
+			auxNode = actionList.get(i);
+			/*auxField = auxNode.getState();
+			fieldSuccessors = auxField.getField();*/
+			System.out.println(auxNode.toString2());
+			front.insertInList(auxNode);
+			
+		}
+		Collections.sort(front.getFrontierList());
 	}
+	
 
 }//end Main
 

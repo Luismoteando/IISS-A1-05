@@ -10,8 +10,8 @@ public class Frontier {
 		frontierList = new LinkedList<Node>();
 	}
 	
-	public LinkedList<Node> insertInList(Node node){
-		if (frontierList.get(0) == null){
+	public void insertInList(Node node){
+		/*if (frontierList.size() == 0){
 			frontierList.addFirst(node);
 		}else{
 			for(int i=0; i<frontierList.size(); i++){
@@ -22,8 +22,8 @@ public class Frontier {
 					frontierList.add(i, node);				
 				}
 			}
-		}		
-		return frontierList;
+		}*/		
+		frontierList.add(node);
 	}
 	
 	public void removeFirst(){
@@ -32,6 +32,10 @@ public class Frontier {
 	
 	public boolean isEmptyList(){
 		return frontierList.isEmpty();
+	}
+	
+	public LinkedList<Node> getFrontierList(){
+		return frontierList;
 	}
 	
 	///////////////////////////Queue part////////////////////////////////
