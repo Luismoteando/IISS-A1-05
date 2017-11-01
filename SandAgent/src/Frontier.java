@@ -5,24 +5,12 @@ public class Frontier {
 	LinkedList<Node> frontierList;
 	PriorityQueue<Node> frontierQueue;
 	
-	///////////////////////////////List part///////////////////////////////
+	//Linked List
 	public void createFrontierList(){
 		frontierList = new LinkedList<Node>();
 	}
 	
-	public void insertInList(Node node){
-		/*if (frontierList.size() == 0){
-			frontierList.addFirst(node);
-		}else{
-			for(int i=0; i<frontierList.size(); i++){
-				if (frontierList.get(i).getValue() < node.getValue()){
-					continue;
-				}
-				else{
-					frontierList.add(i, node);				
-				}
-			}
-		}*/		
+	public void insertInList(Node node){	
 		frontierList.add(node);
 	}
 	
@@ -38,7 +26,7 @@ public class Frontier {
 		return frontierList;
 	}
 	
-	///////////////////////////Queue part////////////////////////////////
+	//Priority Queue
 	
 	public void createFrontierQueue(){
 		frontierQueue = new PriorityQueue<Node>();
@@ -54,5 +42,9 @@ public class Frontier {
 	
 	public boolean isEmptyQueue(){
 		return frontierQueue.isEmpty();
+	}
+	
+	public PriorityQueue<Node> getFrontierQueue(){
+		return frontierQueue;
 	}
 }

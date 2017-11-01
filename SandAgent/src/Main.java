@@ -35,7 +35,7 @@ public class Main {
 		m = new Movement(prueba);
 		printSand();
 		Action.generateActions(t, f, m);
-		nodesOrderedList();
+		compareOrderingTime();
 //		actionsWithMoves = Action.actionsWithMovements(m, t, f);
 //		f.isGoal();
 //		Node n = new Node();
@@ -102,29 +102,55 @@ public class Main {
 			System.out.println("South: " + "[" + m.getSouthMovement(t, f)[0] + ", " + m.getSouthMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]]);
 	}//end printSand
 	
-	public static void nodesOrderedList(){
-		Long initialTime, finalTime;
-//		int[][] fieldSuccessors;
+	public static void compareOrderingTime(){
+		Long initialTime, finalTimeList, finalTimeQueue;
 		Node parent = new Node(f);
 		Node auxNode;
 //		Field auxField;
-		Frontier front = new Frontier();
+		Frontier frontList = new Frontier();
+		Frontier frontQueue = new Frontier();
 		Action action = new Action();
 		List<Node> actionList;
-		List<Node> frontierList;
-		front.createFrontierList();
+		Queue<Node> actionQueue;
 		actionList = action.successors(parent, m, t, f);
+		
+		//Ordering List
+		frontList.createFrontierList();
 		
 		initialTime = System.nanoTime();
 		for(int i = 0; i < actionList.size(); i++){
 			auxNode = actionList.get(i);
-			/*auxField = auxNode.getState();
-			fieldSuccessors = auxField.getField();*/
-			System.out.println(auxNode.toString2());
-			front.insertInList(auxNode);
+			frontList.insertInList(auxNode);
 			
 		}
-		Collections.sort(front.getFrontierList());
+		Collections.sort(frontList.getFrontierList());
+		finalTimeList = System.nanoTime() - initialTime;
+		System.out.println("Linked list");
+		for(int i = 0; i < frontList.getFrontierList().size(); i++){
+			auxNode = frontList.getFrontierList().get(i);
+			System.out.println(auxNode.toString2());
+			
+		}
+		
+		//Ordering Queue
+		frontQueue.createFrontierQueue();
+		initialTime = System.nanoTime();
+		for(int i = 0; i < actionList.size(); i++){
+			auxNode = actionList.get(i);
+			frontQueue.insertInQueue(auxNode);
+		}
+		finalTimeQueue = System.nanoTime() - initialTime;
+		System.out.println("Priority Queue");
+		for(int i = 0; i < frontList.getFrontierList().size(); i++){
+			auxNode = frontQueue.getFrontierQueue().remove();
+			System.out.println(auxNode.toString2());
+		}
+		System.out.println("Time for the Linked List = " + finalTimeList + "ns");
+		System.out.println("Time for the Priority Queue = " + finalTimeQueue + "ns");
+		if(finalTimeList < finalTimeQueue)
+			System.out.println("The best option is to use a Linked List");
+		else
+			System.out.println("The best option is to use a Priority Queue");
 	}
 	
 
