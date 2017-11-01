@@ -8,8 +8,7 @@ public class Main {
 	private static Scanner scan;
 	private static Field f;
 	private static Tractor t;
-//	private static Random randomGenerator;
-	public static Movement m;
+	private static Movement m;
 	
 
 	public static void main(String[] args) throws FileNotFoundException{
@@ -34,11 +33,6 @@ public class Main {
 		printSand();
 		Action.generateActions(t, f, m);
 		compareOrderingTime();
-//		actionsWithMoves = Action.actionsWithMovements(m, t, f);
-//		f.isGoal();
-//		Node n = new Node();
-//		System.out.println(n.getValue());
-//		System.out.println("\nRandom action selected\n" + generateRandom());
 
 	}//end main
 
@@ -102,14 +96,13 @@ public class Main {
 	
 	public static void compareOrderingTime(){
 		Long initialTime, finalTimeList, finalTimeQueue;
+		int size;
 		Node parent = new Node(f);
 		Node auxNode;
-//		Field auxField;
 		Frontier frontList = new Frontier();
 		Frontier frontQueue = new Frontier();
 		Action action = new Action();
 		List<Node> actionList;
-		Queue<Node> actionQueue;
 		actionList = action.successors(parent, m, t, f);
 		
 		//Ordering List
@@ -139,7 +132,8 @@ public class Main {
 		}
 		finalTimeQueue = System.nanoTime() - initialTime;
 		System.out.println("Priority Queue");
-		for(int i = 0; i < frontList.getFrontierList().size(); i++){
+		size = frontQueue.getFrontierQueue().size();
+		for(int i = 0; i < size; i++){
 			auxNode = frontQueue.getFrontierQueue().remove();
 			System.out.println(auxNode.toString2());
 		}

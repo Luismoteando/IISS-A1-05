@@ -24,11 +24,11 @@ public class Action {
 	}
 
 	public static void generateActions(Tractor t, Field f, Movement m){
-		int[] elementos = possibilities(t, f);
+		int[] elements = possibilities(t, f);
 		int n = 4;                  //Tipos para escoger
-		int r = elementos.length;   //Elementos elegidos
+		int r = elements.length;   //Elementos elegidos
 
-		recursiveActions(elementos, "", n, r, f, t, m);
+		recursiveActions(elements, "", n, r, f, t, m);
 	}//end generateActions
 
 	public static void recursiveActions(int[] elem, String act, int n, int r, Field f, Tractor t, Movement m) {
@@ -85,8 +85,6 @@ public class Action {
 
 		if((next[0] + next[1] + next[2] + next[3]) != difference)
 			return false;
-		//metodo para comprobar el maximo (cogemos los metodos get de los movimientos y vemos si su valor supera el maximo)
-		//if()
 		if(!f.checkSuccessors(next, t, m))
 			return false;
 

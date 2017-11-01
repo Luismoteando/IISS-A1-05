@@ -2,11 +2,12 @@ import java.util.Random;
 
 public class Node implements Comparable<Node>{
 
-	Node parent;
-	Field state;
-	Action action;
-	int cost, depth, value;
-	Random rn = new Random();
+	@SuppressWarnings("unused")
+	private Node parent;
+	private Field state;
+	private Action action;
+	private int cost, depth, value;
+	private Random rn = new Random();
 
 	public Node(Field state){
 		this.state = state;

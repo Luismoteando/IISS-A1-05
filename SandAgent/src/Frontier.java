@@ -2,8 +2,8 @@ import java.util.*;
 
 public class Frontier {
 	
-	LinkedList<Node> frontierList;
-	PriorityQueue<Node> frontierQueue;
+	private LinkedList<Node> frontierList;
+	private PriorityQueue<Node> frontierQueue;
 	
 	//Linked List
 	public void createFrontierList(){

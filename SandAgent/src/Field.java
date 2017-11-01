@@ -26,22 +26,21 @@ public class Field {
 
 		if((y == column - 1 && next[2] != 0) || (y > column - 1 && max - field[m.getEastMovement(t, this)[0]][m.getEastMovement(t, this)[1]] < next[2]))//East
 			return false;
+		
 		if((x == row - 1 && next[3] != 0) || (x > row - 1 && max - field[m.getSouthMovement(t, this)[0]][m.getSouthMovement(t, this)[1]] < next[3]))//South
 			return false;
 
 		return true;
 	}
 
-	public void isGoal(){		
+	public boolean isGoal(){		
 		for(int i=0; i<field.length; i++){
 			for(int j=0; j<field[i].length; j++){				
-				if(field[i][j] != k){
-					System.out.println("Position [" + i+ "," +j + "] does not match value 'k'.");
-
-				}
-				else System.out.println("Position [" + i+ "," +j + "] matches value 'k'.");
+				if(field[i][j] != k)
+					return false;
 			}
-		}			
+		}
+		return true;
 	}	
 
 
