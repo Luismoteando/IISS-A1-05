@@ -13,8 +13,6 @@ public class Main {
 	
 
 	public static void main(String[] args) throws FileNotFoundException{
-		@SuppressWarnings("unused")
-		List<Action> actionsWithMoves;
 		
 		storeValues();
 
