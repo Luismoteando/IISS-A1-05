@@ -2,14 +2,14 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	private static int x = 0, y = 0, k = 0, max = 0, column = 0,row = 0;
-	private static int[] prueba = {1, 2};
-	private static int [][] field;
-	private static Scanner scan;
-	private static Field f;
-	private static Tractor t;
-	private static Movement m;
-	
+	static int x = 0, y = 0, k = 0, max = 0, column = 0,row = 0;
+	static int[] prueba = {1, 2};
+	static int [][] field;
+	static Scanner scan;
+	static Field f;
+	static Tractor t;
+	static Movement m;
+	static String strategy;	
 
 	public static void main(String[] args) throws FileNotFoundException{
 		
@@ -33,6 +33,7 @@ public class Main {
 		printSand();
 		Action.generateActions(t, f, m);
 		compareOrderingTime();
+		strategySelection();
 
 	}//end main
 
@@ -145,6 +146,35 @@ public class Main {
 			System.out.println("The best option is to use a Priority Queue");
 	}
 	
+	private static void strategySelection() {
+
+		System.out.println("\n- Strategies -\n"
+				+ "1. Breath-first search\n"
+				+ "2. Depth-first search\n"
+				+ "3. Uniform cost search\n");
+
+		scan = new Scanner(System.in);
+		String selection = scan.next();
+
+		switch (selection) {
+
+		case "1":
+			strategy = "BFS";
+			break;
+			
+		case "2":
+			strategy = "DFS";
+			break;
+
+		case "3":
+			strategy = "UCS";
+			break;
+
+		default:				
+			System.out.println("Wrong character! Type a number from 1 to 3.");
+			strategySelection();
+		}
+	}
 
 }//end Main
 
