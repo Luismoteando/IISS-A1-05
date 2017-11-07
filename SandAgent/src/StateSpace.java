@@ -1,25 +1,25 @@
 import java.util.*;
 
 //Leave sand
-public class Action {
+public class StateSpace {
 	private int northSand, westSand, eastSand, southSand;
 	private Movement moves;
-	private static List<Action> actions = new ArrayList<Action>();
+	private static List<StateSpace> actions = new ArrayList<StateSpace>();
 
 
-	public Action(int northSand, int westSand, int eastSand, int southSand) {
+	public StateSpace(int northSand, int westSand, int eastSand, int southSand) {
 		this.northSand = northSand;
 		this.westSand = westSand;
 		this.eastSand = eastSand;
 		this.southSand = southSand;
 	}
 
-	public Action(Movement moves, List<Action> action) {
+	public StateSpace(Movement moves, List<StateSpace> action) {
 		this.moves = moves;
-		Action.actions = action;
+		StateSpace.actions = action;
 	}
 
-	public Action(){
+	public StateSpace(){
 
 	}
 
@@ -34,12 +34,12 @@ public class Action {
 	public static void recursiveActions(int[] elem, String act, int n, int r, Field f, Tractor t, Movement m) {
 		int integer;
 		int[] next = null;
-		Action na;
+		StateSpace na;
 		if (n == 0) {
 			integer = Integer.parseInt(act);
 			next = splitNumbers(integer);
 			if(validActions(next, f, t, m)){
-				na = new Action(next[0], next[1], next[2], next[3]);
+				na = new StateSpace(next[0], next[1], next[2], next[3]);
 				actions.add(na);
 			}
 		} else {
@@ -91,9 +91,9 @@ public class Action {
 		return true;		
 	}
 
-	public static  List<Action> actionsWithMovements(Movement m, Tractor t, Field f){
-		List<Action> actionsWithMoves = new ArrayList<Action>();
-		Action action = null;
+	public static  List<StateSpace> actionsWithMovements(Movement m, Tractor t, Field f){
+		List<StateSpace> actionsWithMoves = new ArrayList<StateSpace>();
+		StateSpace action = null;
 		Movement mv = null;
 		System.out.println("\nThe list containing the valid actions is:");
 
@@ -113,17 +113,17 @@ public class Action {
 		return actionsWithMoves;		
 	}
 
-	public static Action actionsForEachMovement(Movement mv, int hor, int ver, Action action, List<Action> actionsWithMoves){
+	public static StateSpace actionsForEachMovement(Movement mv, int hor, int ver, StateSpace action, List<StateSpace> actionsWithMoves){
 		int[] moves = new int[2];
 		moves[0] = hor;
 		moves[1] = ver;
 		mv = new Movement(moves);
-		action = new Action(mv, actions);		
+		action = new StateSpace(mv, actions);		
 		return action;		
 	}
 
-	public static List<Field> tryActions(Movement m, List<Action> a, Field f, Tractor t){
-		Action auxAction, act;
+	public static List<Field> tryActions(Movement m, List<StateSpace> a, Field f, Tractor t){
+		StateSpace auxAction, act;
 		Movement mv;
 		List<Field> fieldList= new ArrayList<Field>();
 		Field auxField;
@@ -164,10 +164,10 @@ public class Action {
 	}
 
 	public List<Node> successors(Node parent, Movement m, Tractor t, Field f){
-		List<Action> actionList = actionsWithMovements(m, t, f);
+		List<StateSpace> actionList = actionsWithMovements(m, t, f);
 		List<Node> successors = new ArrayList<Node>();
 		List<Field> fieldList = tryActions(m, actionList, f, t);
-		Action auxAction, auxAction2;
+		StateSpace auxAction, auxAction2;
 		Node node;
 		Field auxField;
 		for(int i = 0 ; i < actionList.size(); i++){
@@ -192,6 +192,17 @@ public class Action {
 		}
 		return possible;
 	}
+	
+
+	public boolean isGoal(int [][] field, int k){		
+		for(int i=0; i<field.length; i++){
+			for(int j=0; j<field[i].length; j++){				
+				if(field[i][j] != k)
+					return false;
+			}
+		}
+		return true;
+	}	
 
 	public int getNorthSand() {
 		return northSand;
@@ -233,15 +244,15 @@ public class Action {
 		this.moves = moves;
 	}
 
-	public List<Action> getActions() {
+	public List<StateSpace> getActions() {
 		return actions;
 	}
 
-	public static void setActions(List<Action> actions) {
-		Action.actions = actions;
+	public static void setActions(List<StateSpace> actions) {
+		StateSpace.actions = actions;
 	}
 
-	public static void printActions(List<Action> actionsWithMoves){
+	public static void printActions(List<StateSpace> actionsWithMoves){
 		for(int i = 0; i < actionsWithMoves.size(); i++)
 			System.out.println(actionsWithMoves.get(i).printWithMoves() + "\n");
 	}

@@ -12,7 +12,7 @@ public class Main {
 	static String strategy;	
 
 	public static void main(String[] args) throws FileNotFoundException{
-		
+
 		storeValues();
 
 		if(field.length != row || field[0].length != column){
@@ -31,7 +31,7 @@ public class Main {
 		t = new Tractor(x, y);
 		m = new Movement(prueba);
 		printSand();
-		Action.generateActions(t, f, m);
+		StateSpace.generateActions(t, f, m);
 		compareOrderingTime();
 		strategySelection();
 
@@ -94,7 +94,7 @@ public class Main {
 		if(x != row - 1)
 			System.out.println("South: " + "[" + m.getSouthMovement(t, f)[0] + ", " + m.getSouthMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]]);
 	}//end printSand
-	
+
 	public static void compareOrderingTime(){
 		Long initialTime, finalTimeList, finalTimeQueue;
 		int size;
@@ -102,18 +102,18 @@ public class Main {
 		Node auxNode;
 		Frontier frontList = new Frontier();
 		Frontier frontQueue = new Frontier();
-		Action action = new Action();
+		StateSpace action = new StateSpace();
 		List<Node> actionList;
 		actionList = action.successors(parent, m, t, f);
-		
+
 		//Ordering List
 		frontList.createFrontierList();
-		
+
 		initialTime = System.nanoTime();
 		for(int i = 0; i < actionList.size(); i++){
 			auxNode = actionList.get(i);
 			frontList.insertInList(auxNode);
-			
+
 		}
 		Collections.sort(frontList.getFrontierList());
 		finalTimeList = System.nanoTime() - initialTime;
@@ -121,9 +121,9 @@ public class Main {
 		for(int i = 0; i < frontList.getFrontierList().size(); i++){
 			auxNode = frontList.getFrontierList().get(i);
 			System.out.println(auxNode.toString2());
-			
+
 		}
-		
+
 		//Ordering Queue
 		frontQueue.createFrontierQueue();
 		initialTime = System.nanoTime();
@@ -145,8 +145,10 @@ public class Main {
 		else
 			System.out.println("The best option is to use a Priority Queue");
 	}
-	
+
 	private static void strategySelection() {
+		boolean check = true;
+		int selection;
 
 		System.out.println("\n- Strategies -\n"
 				+ "1. Breath-first search\n"
@@ -154,27 +156,64 @@ public class Main {
 				+ "3. Uniform cost search\n");
 
 		scan = new Scanner(System.in);
-		String selection = scan.next();
 
+		selection = scan.nextInt();
+		check = true;
 		switch (selection) {
 
-		case "1":
+		case 1:
 			strategy = "BFS";
-			break;
-			
-		case "2":
-			strategy = "DFS";
+
 			break;
 
-		case "3":
+		case 2:
+			strategy = "DFS";
+
+			break;
+
+		case 3:
 			strategy = "UCS";
+
 			break;
 
 		default:				
 			System.out.println("Wrong character! Type a number from 1 to 3.");
 			strategySelection();
-		}
+
+		}		
 	}
+
+	private static boolean search(Problem prob, int strategy, int maxDepth){
+		boolean solution = false;
+		Frontier front = new Frontier();
+		front.createFrontierQueue();
+		Node parent = new Node(f);
+		Node actual;
+		Node initialNode = new Node(parent, prob.getField(), 0, 0, 0);
+		List<Node> successorList;
+		front.insertInQueue(initialNode);
+
+		while(solution = false && !front.isEmptyQueue()){
+			actual = front.getFrontierQueue().remove();
+			if(prob.isGoalState(actual.getField())){
+				solution = true;
+			}
+			else{
+				successorList = prob.successors(actual, m, t, f);
+				//método estrategia
+				for(int i = 0; i < successorList.size(); i++)
+					front.insertInQueue(successorList.get(i));
+			}
+		}
+
+//		if(solution)
+//			return createSolution(actual);
+//		else
+//			return false;
+//		
+		return solution;
+	}
+
 
 }//end Main
 

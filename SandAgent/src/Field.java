@@ -32,17 +32,7 @@ public class Field {
 
 		return true;
 	}
-
-	public boolean isGoal(){		
-		for(int i=0; i<field.length; i++){
-			for(int j=0; j<field[i].length; j++){				
-				if(field[i][j] != k)
-					return false;
-			}
-		}
-		return true;
-	}	
-
+	
 
 	public int getDifference(Tractor t){
 		return field[t.getX()][t.getY()] - k;
