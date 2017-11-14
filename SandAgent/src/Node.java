@@ -1,35 +1,20 @@
-import java.util.Random;
 
 public class Node implements Comparable<Node>{
 
-	@SuppressWarnings("unused")
 	private Node parent;
 	private Field state;
 	private StateSpace action;
 	private int cost, depth, value;
-	private int [][] field;
-//	private Random rn = new Random();
 
 	public Node(Field state){
 		this.state = state;
 	}
+
 	
-	public Node(int [][] field){
-		this.field = field;
-	}
-	
-//	public Node(Node parent, Field state, int cost, int depth, StateSpace action) {
-//		this.parent = parent;
-//		this.state = state;
-//		this.cost = cost;
-//		this.depth = depth;
-//		this.value = rn.nextInt(1000);
-//		this.action = action;
-//	}
-	
-	public Node(Node parent, int[][]state, int strategy){
+	public Node(Node parent, Field state, int strategy, StateSpace action){
 		this.parent = parent;
-		this.field = state;
+		this.state = state;
+		this.action = action;
 		this.cost = cost + 1;
 		this.depth = depth + 1;
 		if(strategy == 1)
@@ -75,13 +60,10 @@ public class Node implements Comparable<Node>{
 	public StateSpace getAction() {
 		return action;
 	}
+	
 	public void setAction(StateSpace action) {
 		this.action = action;
 	}	
-	
-	public int[][] getField() {		
-		return field;
-	}
 	
 	public Node getParent() {
 		return parent;

@@ -2,16 +2,16 @@ import java.util.List;
 
 public class Problem {
 	private StateSpace action;
-	private int [][] field;
+	private Field field;
 	private int k;
 	
-	public Problem (StateSpace action, int [][]field, int k){
+	public Problem (StateSpace action, Field field, int k){
 		this.action = action;
 		this.field = field;
 		this.k = k;
 	}	
 	
-	public boolean isGoalState(int [][] f){		 
+	public boolean isGoalState(Field f){		 
 		return action.isGoal(f, k);
 	}
 
@@ -19,11 +19,11 @@ public class Problem {
 		return action;
 	}	
 	
-	public List<Node> successors(Node parent, int[][] state, Movement m, Tractor t, Field f, int strategy){
-		return action.successors(parent, state, m, t, f, strategy);
+	public List<Node> successors(Node parent, Field state, Movement m, int[] tractorPosition, int strategy){
+		return action.successors(parent, state, m, tractorPosition, strategy);
 	}
 
-	public int [][] getField() {
+	public Field getField() {
 		return field;
 	}	
 	

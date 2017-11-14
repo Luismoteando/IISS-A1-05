@@ -23,37 +23,37 @@ public class StateSpace {
 
 	}
 
-	public static void generateActions(Tractor t, Field f, Movement m){
-		int[] elements = possibilities(t, f);
+	public static void generateActions(int[] tractorPosition, Field f, Movement m){
+		int[] elements = possibilities(tractorPosition, f);
 		int n = 4;                  //Tipos para escoger
 		int r = elements.length;   //Elementos elegidos
 
-		recursiveActions(elements, "", n, r, f, t, m);
+		recursiveActions(elements, "", n, r, f, tractorPosition, m);
 	}//end generateActions
 
-	public static void recursiveActions(int[] elem, String act, int n, int r, Field f, Tractor t, Movement m) {
+	public static void recursiveActions(int[] elem, String act, int n, int r, Field f, int[] tractorPosition, Movement m) {
 		int integer;
 		int[] next = null;
 		StateSpace na;
 		if (n == 0) {
 			integer = Integer.parseInt(act);
 			next = splitNumbers(integer);
-			if(validActions(next, f, t, m)){
+			if(validActions(next, f, tractorPosition, m)){
 				na = new StateSpace(next[0], next[1], next[2], next[3]);
 				actions.add(na);
 			}
 		} else {
 			for (int i = 0; i < r; i++) {
-				recursiveActions(elem, act + elem[i], n - 1, r, f, t, m);
+				recursiveActions(elem, act + elem[i], n - 1, r, f, tractorPosition, m);
 			}
 		}
 	}//end Perm1
 
-	public static int[] possibilities(Tractor t, Field f){
+	public static int[] possibilities(int[] tractorPosition, Field f){
 		int difference;
-		difference = f.getDifference(t);
+		difference = f.getDifference(tractorPosition);
 
-		if(f.getField()[t.getX()][t.getY()] < f.getK()){
+		if(f.getField()[tractorPosition[0]][tractorPosition[1]] < f.getK()){
 			System.out.println("Trying to move sand from a box that is lesser than 'k' (The desired quantity)");
 			System.exit(0);
 		}
@@ -80,34 +80,34 @@ public class StateSpace {
 		return comb;
 	}
 
-	public static boolean validActions(int[] next, Field f, Tractor t, Movement m){
-		int difference = f.getDifference(t);		
+	public static boolean validActions(int[] next, Field f, int[] tractorPosition, Movement m){
+		int difference = f.getDifference(tractorPosition);		
 
 		if((next[0] + next[1] + next[2] + next[3]) != difference)
 			return false;
-		if(!f.checkSuccessors(next, t, m))
+		if(!f.checkSuccessors(next, tractorPosition, m))
 			return false;
 
 		return true;		
 	}
 
-	public static  List<StateSpace> actionsWithMovements(Movement m, Tractor t, Field f){
+	public static  List<StateSpace> actionsWithMovements(Movement m, int[] tractorPosition, Field f){
 		List<StateSpace> actionsWithMoves = new ArrayList<StateSpace>();
 		StateSpace action = null;
 		Movement mv = null;
 		System.out.println("\nThe list containing the valid actions is:");
 
-		if(t.getX() != 0)
-			actionsWithMoves.add(actionsForEachMovement(mv, m.getNorthMovement(t)[0], m.getNorthMovement(t)[1], action, actionsWithMoves));
+		if(tractorPosition[0] != 0)
+			actionsWithMoves.add(actionsForEachMovement(mv, m.getNorthMovement(tractorPosition)[0], m.getNorthMovement(tractorPosition)[1], action, actionsWithMoves));
 
-		if(t.getY() != 0)
-			actionsWithMoves.add(actionsForEachMovement(mv, m.getWestMovement(t)[0], m.getWestMovement(t)[1], action, actionsWithMoves));
+		if(tractorPosition[1] != 0)
+			actionsWithMoves.add(actionsForEachMovement(mv, m.getWestMovement(tractorPosition)[0], m.getWestMovement(tractorPosition)[1], action, actionsWithMoves));
 
-		if(t.getY() != f.getColumn() - 1)
-			actionsWithMoves.add(actionsForEachMovement(mv, m.getEastMovement(t, f)[0], m.getEastMovement(t, f)[1], action, actionsWithMoves));
+		if(tractorPosition[1] != f.getColumn() - 1)
+			actionsWithMoves.add(actionsForEachMovement(mv, m.getEastMovement(tractorPosition, f)[0], m.getEastMovement(tractorPosition, f)[1], action, actionsWithMoves));
 
-		if(t.getX() != f.getRow() - 1)
-			actionsWithMoves.add(actionsForEachMovement(mv, m.getSouthMovement(t, f)[0], m.getSouthMovement(t, f)[1], action, actionsWithMoves));
+		if(tractorPosition[0] != f.getRow() - 1)
+			actionsWithMoves.add(actionsForEachMovement(mv, m.getSouthMovement(tractorPosition, f)[0], m.getSouthMovement(tractorPosition, f)[1], action, actionsWithMoves));
 
 		printActions(actionsWithMoves);
 		return actionsWithMoves;		
@@ -122,7 +122,7 @@ public class StateSpace {
 		return action;		
 	}
 
-	public static List<Field> tryActions(Movement m, List<StateSpace> a, Field f, Tractor t){
+	public static List<Field> tryActions(Movement m, List<StateSpace> a, Field f, int[] tractorPosition){
 		StateSpace auxAction, act;
 		Movement mv;
 		List<Field> fieldList= new ArrayList<Field>();
@@ -132,19 +132,19 @@ public class StateSpace {
 			mv = auxAction.getMoves();
 			for(int j = 0; j < auxAction.getActions().size(); j++){
 				int[][] possible = createPossibleField(f);
-				possible[t.getX()][t.getY()] = possible[t.getX()][t.getY()] - f.getDifference(t);
+				possible[tractorPosition[0]][tractorPosition[1]] = possible[tractorPosition[0]][tractorPosition[1]] - f.getDifference(tractorPosition);
 				act = auxAction.getActions().get(j);
 				if(act.getNorthSand() != 0)
-					possible[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]] = possible[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]] + act.getNorthSand();		
+					possible[m.getNorthMovement(tractorPosition)[0]][m.getNorthMovement(tractorPosition)[1]] = possible[m.getNorthMovement(tractorPosition)[0]][m.getNorthMovement(tractorPosition)[1]] + act.getNorthSand();		
 
 				if(act.getWestSand() != 0)
-					possible[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]] = possible[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]] + act.getWestSand();	
+					possible[m.getWestMovement(tractorPosition)[0]][m.getWestMovement(tractorPosition)[1]] = possible[m.getWestMovement(tractorPosition)[0]][m.getWestMovement(tractorPosition)[1]] + act.getWestSand();	
 
 				if(act.getEastSand() != 0)
-					possible[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]] = possible[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]] + act.getEastSand();
+					possible[m.getEastMovement(tractorPosition, f)[0]][m.getEastMovement(tractorPosition, f)[1]] = possible[m.getEastMovement(tractorPosition, f)[0]][m.getEastMovement(tractorPosition, f)[1]] + act.getEastSand();
 
 				if(act.getSouthSand() != 0)
-					possible[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]] = possible[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]] + act.getSouthSand();
+					possible[m.getSouthMovement(tractorPosition, f)[0]][m.getSouthMovement(tractorPosition, f)[1]] = possible[m.getSouthMovement(tractorPosition, f)[0]][m.getSouthMovement(tractorPosition, f)[1]] + act.getSouthSand();
 
 				auxField = new Field(mv.getHorizontal(), mv.getVertical(), possible, f.getK(), f.getMax());
 				fieldList.add(auxField);
@@ -163,19 +163,22 @@ public class StateSpace {
 		return fieldList;		
 	}
 
-	public List<Node> successors(Node parent, int[][] state, Movement m, Tractor t, Field f, int strategy){
-		List<StateSpace> actionList = actionsWithMovements(m, t, f);
+	public List<Node> successors(Node parent, Field state, Movement m, int[] tractorPosition, int strategy){
+		List<StateSpace> actionList = actionsWithMovements(m, tractorPosition, state);
 		List<Node> successors = new ArrayList<Node>();
-		List<Field> fieldList = tryActions(m, actionList, f, t);
+		List<Field> fieldList = tryActions(m, actionList, state, tractorPosition);
 		StateSpace auxAction, auxAction2;
+		Movement auxMovement;
 		Node node;
 		Field auxField;
 		for(int i = 0 ; i < actionList.size(); i++){
 			auxAction = actionList.get(i);
+			auxMovement = auxAction.getMoves();
 			for(int j = 0; j < auxAction.getActions().size(); j++){
 				auxAction2 = auxAction.getActions().get(j);
 				auxField = fieldList.get(j);
-				node = new Node(parent, state, strategy);
+				node = new Node(parent, auxField, strategy, auxAction2);
+				node.getAction().setMoves(auxMovement);
 				successors.add(node);			
 			}
 		}
@@ -194,10 +197,10 @@ public class StateSpace {
 	}
 	
 
-	public boolean isGoal(int [][] field, int k){		
-		for(int i=0; i<field.length; i++){
-			for(int j=0; j<field[i].length; j++){				
-				if(field[i][j] != k)
+	public boolean isGoal(Field field, int k){		
+		for(int i=0; i<field.getField().length; i++){
+			for(int j=0; j<field.getField()[i].length; j++){				
+				if(field.getField()[i][j] != k)
 					return false;
 			}
 		}

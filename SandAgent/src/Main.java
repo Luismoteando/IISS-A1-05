@@ -7,7 +7,7 @@ public class Main {
 	static int [][] field;
 	static Scanner scan;
 	static Field f;
-	static Tractor t;
+	static int[] tp = new int [2];
 	static Movement m;
 	static String str;	
 
@@ -28,10 +28,11 @@ public class Main {
 		printField();
 
 		f = new Field(column, row, field, k, max);
-		t = new Tractor(x, y);
+		tp[0] = x;
+		tp[1] = y;
 		m = new Movement(prueba);
-		printSand();
-		StateSpace.generateActions(t, f, m);
+//		printSand();
+		StateSpace.generateActions(tp, f, m);
 //		compareOrderingTime();
 		strategySelection();
 
@@ -82,18 +83,18 @@ public class Main {
 		}//end for
 	}//end printField
 
-	public static void printSand(){
-		System.out.println("\nList of successors:");
-
-		if(x != 0)
-			System.out.println("North: " + "[" + m.getNorthMovement(t)[0] + ", " + m.getNorthMovement(t)[1] + "]" + " // Sand amount: " + f.getField()[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]]);
-		if(y != 0)
-			System.out.println("West: " + "[" + m.getWestMovement(t)[0] + ", " + m.getWestMovement(t)[1] + "]" + " // Sand amount: " + f.getField()[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]]);
-		if(y != column - 1)
-			System.out.println("East: " + "[" + m.getEastMovement(t, f)[0] + ", " + m.getEastMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]]);
-		if(x != row - 1)
-			System.out.println("South: " + "[" + m.getSouthMovement(t, f)[0] + ", " + m.getSouthMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]]);
-	}//end printSand
+//	public static void printSand(){
+//		System.out.println("\nList of successors:");
+//
+//		if(x != 0)
+//			System.out.println("North: " + "[" + m.getNorthMovement(t)[0] + ", " + m.getNorthMovement(t)[1] + "]" + " // Sand amount: " + f.getField()[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]]);
+//		if(y != 0)
+//			System.out.println("West: " + "[" + m.getWestMovement(t)[0] + ", " + m.getWestMovement(t)[1] + "]" + " // Sand amount: " + f.getField()[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]]);
+//		if(y != column - 1)
+//			System.out.println("East: " + "[" + m.getEastMovement(t, f)[0] + ", " + m.getEastMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]]);
+//		if(x != row - 1)
+//			System.out.println("South: " + "[" + m.getSouthMovement(t, f)[0] + ", " + m.getSouthMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]]);
+//	}//end printSand
 
 //	public static void compareOrderingTime(){
 //		Long initialTime, finalTimeList, finalTimeQueue;
@@ -148,14 +149,14 @@ public class Main {
 	private static void strategySelection() {
 		int strategy;
 		StateSpace stateSpace = new StateSpace();
-		Problem prob = new Problem(stateSpace, f.getField(), k);
+		Problem prob = new Problem(stateSpace, f, k);
 
 		System.out.println("\n- Strategies -\n"
 				+ "1. Breath-first search\n"
 				+ "2. Depth-first search\n"
 				+ "3. Depth-limit search\n"
-				+ "4. Iterative-depth search"
-				+ "5. Uniform-cost search");
+				+ "4. Iterative-depth search\n"
+				+ "5. Uniform-cost search\n");
 
 		scan = new Scanner(System.in);
 
@@ -195,24 +196,37 @@ public class Main {
 
 	private static List<Node> boundedSearch(Problem prob, int strategy, int maxDepth){
 		boolean solution = false;
+		int[] tractorPosition = new int[2];
 		Frontier front = new Frontier();
 		front.createFrontierQueue();
 		Node parent = new Node(f);
 		Node actual = null;
-		Node initialNode = new Node(parent, prob.getField(), strategy);
+		StateSpace initialAction = new StateSpace();
+		Movement moves = new Movement(tractorPosition);
+		Node initialNode = new Node(parent, prob.getField(), strategy, initialAction);
 		initialNode.setCost(0);
 		initialNode.setDepth(0);
 		initialNode.setValue(0);
+		initialNode.getAction().setMoves(moves);
+		initialNode.getAction().getMoves().setVertical(x);
+		initialNode.getAction().getMoves().setHorizontal(y);
 		List<Node> successorList = new ArrayList<Node>();
 		front.insertInQueue(initialNode);
-
+		
 		while(solution == false && !front.isEmptyQueue()){
 			actual = front.getFrontierQueue().remove();
-			if(prob.isGoalState(actual.getField())){
+			if(prob.isGoalState(actual.getState())){
 				solution = true;
 			}
 			else{
-				successorList = prob.successors(actual, actual.getField(), m, t, f, strategy);
+				if(actual == initialNode) {
+					tractorPosition[0] = x;
+					tractorPosition[1] = y;
+				}else {
+					tractorPosition[0] = actual.getAction().getMoves().getVertical();
+					tractorPosition[1] = actual.getAction().getMoves().getHorizontal();
+				}
+				successorList = prob.successors(actual, actual.getState(), actual.getAction().getMoves(), tractorPosition, strategy);
 				for(int i = 0; i < successorList.size(); i++)
 					front.insertInQueue(successorList.get(i));
 			}

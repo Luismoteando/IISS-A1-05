@@ -8,9 +8,9 @@ public class Movement {
 		this.horizontal = moves[1];
 	}
 
-	public int[] getNorthMovement(Tractor t){
-		int x = t.getX();
-		int y = t.getY();
+	public int[] getNorthMovement(int[] tractorPosition){
+		int x = tractorPosition[0];
+		int y = tractorPosition[1];
 		int[] northSuccessor = new int[2];
 		if(x != 0){
 			northSuccessor[0] = x - 1;
@@ -19,9 +19,9 @@ public class Movement {
 		return northSuccessor;
 	}
 	
-	public int[] getWestMovement(Tractor t){
-		int x = t.getX();
-		int y = t.getY();
+	public int[] getWestMovement(int[] tractorPosition){
+		int x = tractorPosition[0];
+		int y = tractorPosition[1];
 		int[] westSuccessor = new int[2];
 		if(y != 0){
 			westSuccessor[0] = x;
@@ -30,9 +30,9 @@ public class Movement {
 		return westSuccessor;
 	}
 	
-	public int[] getEastMovement(Tractor t, Field f){
-		int x = t.getX();
-		int y = t.getY();
+	public int[] getEastMovement(int[] tractorPosition, Field f){
+		int x = tractorPosition[0];
+		int y = tractorPosition[1];
 		int[] eastSuccessor = new int[2];
 		if(y != f.getColumn() - 1){
 			eastSuccessor[0] = x;
@@ -41,9 +41,9 @@ public class Movement {
 		return eastSuccessor;
 	}
 	
-	public int[] getSouthMovement(Tractor t, Field f){
-		int x = t.getX();
-		int y = t.getY();
+	public int[] getSouthMovement(int[] tractorPosition, Field f){
+		int x = tractorPosition[0];
+		int y = tractorPosition[1];
 		int[] southSuccessor = new int[2];
 		if(x != f.getRow() - 1){
 			southSuccessor[0] = x + 1;
@@ -63,6 +63,15 @@ public class Movement {
 	@Override
 	public String toString() {
 		return "Movement [" + vertical + ", " + horizontal + "]";
+	}
+
+	public void setVertical(int x) {
+		this.vertical = x;
+	}
+
+	public void setHorizontal(int y) {
+		this.horizontal = y;
+		
 	}
 
 }

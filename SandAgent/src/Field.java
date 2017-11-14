@@ -15,27 +15,27 @@ public class Field {
 
 
 	//checks if the successors exist
-	public boolean checkSuccessors(int[] next, Tractor t, Movement m){
-		int x = t.getX();
-		int y = t.getY();
-		if((x == 0 && next[0] != 0) || (x > 0 && max - field[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]] < next[0]))//North
+	public boolean checkSuccessors(int[] next, int[] tractorPosition, Movement m){
+		int x = tractorPosition[0];
+		int y = tractorPosition[1];
+		if((x == 0 && next[0] != 0) || (x > 0 && max - field[m.getNorthMovement(tractorPosition)[0]][m.getNorthMovement(tractorPosition)[1]] < next[0]))//North
 			return false;
 
-		if((y == 0 && next[1] != 0) || (y > 0 && max - field[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]] < next[1]))//West
+		if((y == 0 && next[1] != 0) || (y > 0 && max - field[m.getWestMovement(tractorPosition)[0]][m.getWestMovement(tractorPosition)[1]] < next[1]))//West
 			return false;
 
-		if((y == column - 1 && next[2] != 0) || (y > column - 1 && max - field[m.getEastMovement(t, this)[0]][m.getEastMovement(t, this)[1]] < next[2]))//East
+		if((y == column - 1 && next[2] != 0) || (y > column - 1 && max - field[m.getEastMovement(tractorPosition, this)[0]][m.getEastMovement(tractorPosition, this)[1]] < next[2]))//East
 			return false;
 		
-		if((x == row - 1 && next[3] != 0) || (x > row - 1 && max - field[m.getSouthMovement(t, this)[0]][m.getSouthMovement(t, this)[1]] < next[3]))//South
+		if((x == row - 1 && next[3] != 0) || (x > row - 1 && max - field[m.getSouthMovement(tractorPosition, this)[0]][m.getSouthMovement(tractorPosition, this)[1]] < next[3]))//South
 			return false;
 
 		return true;
 	}
 	
 
-	public int getDifference(Tractor t){
-		return field[t.getX()][t.getY()] - k;
+	public int getDifference(int[] tractorPosition){
+		return field[tractorPosition[0]][tractorPosition[1]] - k;
 	}
 
 	public int getColumn() {
