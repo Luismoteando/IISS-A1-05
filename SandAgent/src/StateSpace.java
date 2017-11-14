@@ -163,7 +163,7 @@ public class StateSpace {
 		return fieldList;		
 	}
 
-	public List<Node> successors(Node parent, Movement m, Tractor t, Field f){
+	public List<Node> successors(Node parent, int[][] state, Movement m, Tractor t, Field f, int strategy){
 		List<StateSpace> actionList = actionsWithMovements(m, t, f);
 		List<Node> successors = new ArrayList<Node>();
 		List<Field> fieldList = tryActions(m, actionList, f, t);
@@ -175,7 +175,7 @@ public class StateSpace {
 			for(int j = 0; j < auxAction.getActions().size(); j++){
 				auxAction2 = auxAction.getActions().get(j);
 				auxField = fieldList.get(j);
-				node = new Node(parent, auxField, parent.getCost() + 1, parent.getDepth() + 1, auxAction2);
+				node = new Node(parent, state, strategy);
 				successors.add(node);			
 			}
 		}

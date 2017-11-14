@@ -11,7 +11,21 @@ public class Frontier {
 	}
 	
 	public void insertInList(Node node){	
-		frontierList.add(node);
+		int i = 0;
+		if(frontierList.isEmpty())
+			frontierList.add(node);
+		else{
+			Node previous = frontierList.get(i);
+			for(int j = 0; j < frontierList.size(); j++){
+				if(previous.getValue() < node.getValue() && j + 1 < frontierList.size()){
+					previous = frontierList.get(j + 1);
+				}else{
+					frontierList.add(j, node);
+					return;
+
+				}
+			}
+		}
 	}
 	
 	public void removeFirst(){

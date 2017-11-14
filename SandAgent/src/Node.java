@@ -8,7 +8,7 @@ public class Node implements Comparable<Node>{
 	private StateSpace action;
 	private int cost, depth, value;
 	private int [][] field;
-	private Random rn = new Random();
+//	private Random rn = new Random();
 
 	public Node(Field state){
 		this.state = state;
@@ -18,21 +18,26 @@ public class Node implements Comparable<Node>{
 		this.field = field;
 	}
 	
-	public Node(Node parent, Field state, int cost, int depth, StateSpace action) {
-		this.parent = parent;
-		this.state = state;
-		this.cost = cost;
-		this.depth = depth;
-		this.value = rn.nextInt(1000);
-		this.action = action;
-	}
+//	public Node(Node parent, Field state, int cost, int depth, StateSpace action) {
+//		this.parent = parent;
+//		this.state = state;
+//		this.cost = cost;
+//		this.depth = depth;
+//		this.value = rn.nextInt(1000);
+//		this.action = action;
+//	}
 	
-	public Node(Node parent, int[][]field, int cost, int depth, int value){
+	public Node(Node parent, int[][]state, int strategy){
 		this.parent = parent;
-		this.state = state;
-		this.cost = cost;
-		this.depth = depth;
-		this.value = value;
+		this.field = state;
+		this.cost = cost + 1;
+		this.depth = depth + 1;
+		if(strategy == 1)
+			this.value = this.depth;
+		if(strategy == 2 || strategy == 3 || strategy == 4)
+			this.value = -(this.depth);
+		if(strategy == 5)
+			this.value = this.cost;
 	}
 	
 	public int compareTo(Node node){
@@ -78,6 +83,10 @@ public class Node implements Comparable<Node>{
 		return field;
 	}
 	
+	public Node getParent() {
+		return parent;
+	}
+
 	public String toString() {
 		return "\nNode [state=" + state.toString() + ", action=" + action.toString() + ", cost=" + cost + ", depth=" + depth + ", value="
 				+ value + "]";

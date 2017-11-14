@@ -9,7 +9,7 @@ public class Main {
 	static Field f;
 	static Tractor t;
 	static Movement m;
-	static String strategy;	
+	static String str;	
 
 	public static void main(String[] args) throws FileNotFoundException{
 
@@ -32,7 +32,7 @@ public class Main {
 		m = new Movement(prueba);
 		printSand();
 		StateSpace.generateActions(t, f, m);
-		compareOrderingTime();
+//		compareOrderingTime();
 		strategySelection();
 
 	}//end main
@@ -95,85 +95,95 @@ public class Main {
 			System.out.println("South: " + "[" + m.getSouthMovement(t, f)[0] + ", " + m.getSouthMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]]);
 	}//end printSand
 
-	public static void compareOrderingTime(){
-		Long initialTime, finalTimeList, finalTimeQueue;
-		int size;
-		Node parent = new Node(f);
-		Node auxNode;
-		Frontier frontList = new Frontier();
-		Frontier frontQueue = new Frontier();
-		StateSpace action = new StateSpace();
-		List<Node> actionList;
-		actionList = action.successors(parent, m, t, f);
-
-		//Ordering List
-		frontList.createFrontierList();
-
-		initialTime = System.nanoTime();
-		for(int i = 0; i < actionList.size(); i++){
-			auxNode = actionList.get(i);
-			frontList.insertInList(auxNode);
-
-		}
-		Collections.sort(frontList.getFrontierList());
-		finalTimeList = System.nanoTime() - initialTime;
-		System.out.println("Linked list");
-		for(int i = 0; i < frontList.getFrontierList().size(); i++){
-			auxNode = frontList.getFrontierList().get(i);
-			System.out.println(auxNode.toString2());
-
-		}
-
-		//Ordering Queue
-		frontQueue.createFrontierQueue();
-		initialTime = System.nanoTime();
-		for(int i = 0; i < actionList.size(); i++){
-			auxNode = actionList.get(i);
-			frontQueue.insertInQueue(auxNode);
-		}
-		finalTimeQueue = System.nanoTime() - initialTime;
-		System.out.println("Priority Queue");
-		size = frontQueue.getFrontierQueue().size();
-		for(int i = 0; i < size; i++){
-			auxNode = frontQueue.getFrontierQueue().remove();
-			System.out.println(auxNode.toString2());
-		}
-		System.out.println("Time for the Linked List = " + finalTimeList + "ns");
-		System.out.println("Time for the Priority Queue = " + finalTimeQueue + "ns");
-		if(finalTimeList < finalTimeQueue)
-			System.out.println("The best option is to use a Linked List");
-		else
-			System.out.println("The best option is to use a Priority Queue");
-	}
+//	public static void compareOrderingTime(){
+//		Long initialTime, finalTimeList, finalTimeQueue;
+//		int size;
+//		Node parent = new Node(f);
+//		Node auxNode;
+//		Frontier frontList = new Frontier();
+//		Frontier frontQueue = new Frontier();
+//		StateSpace action = new StateSpace();
+//		List<Node> actionList;
+//		actionList = action.successors(parent, m, t, f);
+//
+//		//Ordering List
+//		frontList.createFrontierList();
+//
+//		initialTime = System.nanoTime();
+//		for(int i = 0; i < actionList.size(); i++){
+//			auxNode = actionList.get(i);
+//			frontList.insertInList(auxNode);
+//
+//		}
+//		finalTimeList = System.nanoTime() - initialTime;
+//		System.out.println("Linked list");
+//		for(int i = 0; i < frontList.getFrontierList().size(); i++){
+//			auxNode = frontList.getFrontierList().get(i);
+//			System.out.println(auxNode.toString2());
+//
+//		}
+//
+//		//Ordering Queue
+//		frontQueue.createFrontierQueue();
+//		initialTime = System.nanoTime();
+//		for(int i = 0; i < actionList.size(); i++){
+//			auxNode = actionList.get(i);
+//			frontQueue.insertInQueue(auxNode);
+//		}
+//		finalTimeQueue = System.nanoTime() - initialTime;
+//		System.out.println("Priority Queue");
+//		size = frontQueue.getFrontierQueue().size();
+//		for(int i = 0; i < size; i++){
+//			auxNode = frontQueue.getFrontierQueue().remove();
+//			System.out.println(auxNode.toString2());
+//		}
+//		System.out.println("Time for the Linked List = " + finalTimeList + "ns");
+//		System.out.println("Time for the Priority Queue = " + finalTimeQueue + "ns");
+//		if(finalTimeList < finalTimeQueue)
+//			System.out.println("The best option is to use a Linked List");
+//		else
+//			System.out.println("The best option is to use a Priority Queue");
+//	}
 
 	private static void strategySelection() {
-		boolean check = true;
-		int selection;
+		int strategy;
+		StateSpace stateSpace = new StateSpace();
+		Problem prob = new Problem(stateSpace, f.getField(), k);
 
 		System.out.println("\n- Strategies -\n"
 				+ "1. Breath-first search\n"
 				+ "2. Depth-first search\n"
-				+ "3. Uniform cost search\n");
+				+ "3. Depth-limit search\n"
+				+ "4. Iterative-depth search"
+				+ "5. Uniform-cost search");
 
 		scan = new Scanner(System.in);
 
-		selection = scan.nextInt();
-		check = true;
-		switch (selection) {
+		strategy = scan.nextInt();
+		switch (strategy) {
 
 		case 1:
-			strategy = "BFS";
-
+			boundedSearch(prob, strategy, 20);
 			break;
 
 		case 2:
-			strategy = "DFS";
-
+			boundedSearch(prob, strategy, 20);
+			break;
+			
+		case 3:
+			System.out.println("Type the maximum depth");
+			int maxDepth = scan.nextInt();
+			boundedSearch(prob, strategy, maxDepth);		
+			break;
+			
+		case 4:
+			System.out.println("Type the incrementally depth");
+			int incDepth = scan.nextInt();
+			search(prob, strategy, 20, incDepth);		
 			break;
 
-		case 3:
-			strategy = "UCS";
-
+		case 5:
+			boundedSearch(prob, strategy, 20);
 			break;
 
 		default:				
@@ -183,36 +193,59 @@ public class Main {
 		}		
 	}
 
-	private static boolean search(Problem prob, int strategy, int maxDepth){
+	private static List<Node> boundedSearch(Problem prob, int strategy, int maxDepth){
 		boolean solution = false;
 		Frontier front = new Frontier();
 		front.createFrontierQueue();
 		Node parent = new Node(f);
-		Node actual;
-		Node initialNode = new Node(parent, prob.getField(), 0, 0, 0);
-		List<Node> successorList;
+		Node actual = null;
+		Node initialNode = new Node(parent, prob.getField(), strategy);
+		initialNode.setCost(0);
+		initialNode.setDepth(0);
+		initialNode.setValue(0);
+		List<Node> successorList = new ArrayList<Node>();
 		front.insertInQueue(initialNode);
 
-		while(solution = false && !front.isEmptyQueue()){
+		while(solution == false && !front.isEmptyQueue()){
 			actual = front.getFrontierQueue().remove();
 			if(prob.isGoalState(actual.getField())){
 				solution = true;
 			}
 			else{
-				successorList = prob.successors(actual, m, t, f);
-				//método estrategia
+				successorList = prob.successors(actual, actual.getField(), m, t, f, strategy);
 				for(int i = 0; i < successorList.size(); i++)
 					front.insertInQueue(successorList.get(i));
 			}
 		}
 
-//		if(solution)
-//			return createSolution(actual);
-//		else
-//			return false;
-//		
+		if(solution)
+			return createSolution(actual);
+		else
+			return null;
+		
+		
+	}
+	
+	public static List<Node> search(Problem prob, int strategy, int maxDepth, int incDepth) {
+		int actualDepth = incDepth;
+		List<Node> solution = new ArrayList<Node>();
+		while(actualDepth <= maxDepth) {
+			solution = boundedSearch(prob, strategy, actualDepth);
+			actualDepth += incDepth;
+		}
+		return solution;
+		
+	}
+	
+	public static List<Node> createSolution(Node actual){
+		List<Node> solution = new ArrayList<Node>();
+		while(actual.getParent() != null && solution != null) {
+			solution.add(actual);
+			actual = actual.getParent();	
+		}
 		return solution;
 	}
+
 
 
 }//end Main
