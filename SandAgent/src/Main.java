@@ -149,6 +149,7 @@ public class Main {
 	private static void strategySelection() {
 		int strategy;
 		StateSpace stateSpace = new StateSpace();
+		List<Node> solution = new ArrayList<Node>();
 		Problem prob = new Problem(stateSpace, f, k);
 
 		System.out.println("\n- Strategies -\n"
@@ -164,7 +165,8 @@ public class Main {
 		switch (strategy) {
 
 		case 1:
-			boundedSearch(prob, strategy, 20);
+			solution = boundedSearch(prob, strategy, 20);
+			printSolution(solution);
 			break;
 
 		case 2:
@@ -226,6 +228,8 @@ public class Main {
 					tractorPosition[0] = actual.getAction().getMoves().getVertical();
 					tractorPosition[1] = actual.getAction().getMoves().getHorizontal();
 				}
+				actual.getState().setColumn(column);
+				actual.getState().setRow(row);
 				successorList = prob.successors(actual, actual.getState(), actual.getAction().getMoves(), tractorPosition, strategy);
 				for(int i = 0; i < successorList.size(); i++)
 					front.insertInQueue(successorList.get(i));
@@ -258,6 +262,27 @@ public class Main {
 			actual = actual.getParent();	
 		}
 		return solution;
+	}
+	
+	public static void printSolution(List<Node> solution) {
+		Node auxNode;
+		Field campo;
+		int[][] tierras;
+		System.out.println("Final solution:\n");
+		for(int i = solution.size(); i > 0; i--) {
+			auxNode = solution.get(i - 1);
+			campo = auxNode.getState();
+			tierras = campo.getField();
+			System.out.println(auxNode.getAction().getMoves().toString());
+			System.out.println(auxNode.getAction().toString());
+			for(int j = 0; j < tierras.length; j++) {
+				for(int k = 0; k < tierras[j].length; k++) {
+					System.out.print("|" + tierras[j][k]);									
+				}
+				System.out.print("|\n");
+			}
+			System.out.println();
+		}
 	}
 
 

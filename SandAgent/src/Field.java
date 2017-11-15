@@ -86,4 +86,21 @@ public class Field {
 		return printField(field);
 	}
 
+
+	public void setColumn(int column) {
+		this.column = column;		
+	}
+	
+	public void setRow(int row) {
+		this.row = row;
+	}
+	
+	public void setK(int k) {
+		this.k = k;
+	}
+	
+	public void setMax(int max) {
+		this.max = max;
+	}
+
 }

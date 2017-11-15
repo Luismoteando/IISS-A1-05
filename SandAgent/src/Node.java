@@ -15,8 +15,8 @@ public class Node implements Comparable<Node>{
 		this.parent = parent;
 		this.state = state;
 		this.action = action;
-		this.cost = cost + 1;
-		this.depth = depth + 1;
+		this.cost = parent.getCost() + 1;
+		this.depth = parent.getDepth() + 1;
 		if(strategy == 1)
 			this.value = this.depth;
 		if(strategy == 2 || strategy == 3 || strategy == 4)

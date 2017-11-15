@@ -8,6 +8,9 @@ public class Movement {
 		this.horizontal = moves[1];
 	}
 
+	public Movement() {
+	}
+
 	public int[] getNorthMovement(int[] tractorPosition){
 		int x = tractorPosition[0];
 		int y = tractorPosition[1];
@@ -60,7 +63,6 @@ public class Movement {
 		return horizontal;
 	}
 
-	@Override
 	public String toString() {
 		return "Movement [" + vertical + ", " + horizontal + "]";
 	}
@@ -70,8 +72,7 @@ public class Movement {
 	}
 
 	public void setHorizontal(int y) {
-		this.horizontal = y;
-		
+		this.horizontal = y;		
 	}
 
 }

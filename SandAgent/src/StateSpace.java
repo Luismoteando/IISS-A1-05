@@ -4,6 +4,7 @@ import java.util.*;
 public class StateSpace {
 	private int northSand, westSand, eastSand, southSand;
 	private Movement moves;
+	private StateSpace singleAction;
 	private static List<StateSpace> actions = new ArrayList<StateSpace>();
 
 
@@ -19,8 +20,12 @@ public class StateSpace {
 		StateSpace.actions = action;
 	}
 
-	public StateSpace(){
+	public StateSpace(Movement moves, StateSpace singleAction){
+		this.moves = moves;
+		this.singleAction = singleAction;
+	}
 
+	public StateSpace() {
 	}
 
 	public static void generateActions(int[] tractorPosition, Field f, Movement m){
@@ -97,16 +102,16 @@ public class StateSpace {
 		Movement mv = null;
 		System.out.println("\nThe list containing the valid actions is:");
 
-		if(tractorPosition[0] != 0)
+		if(tractorPosition[0] != 0)//north
 			actionsWithMoves.add(actionsForEachMovement(mv, m.getNorthMovement(tractorPosition)[0], m.getNorthMovement(tractorPosition)[1], action, actionsWithMoves));
 
-		if(tractorPosition[1] != 0)
+		if(tractorPosition[1] != 0)//west
 			actionsWithMoves.add(actionsForEachMovement(mv, m.getWestMovement(tractorPosition)[0], m.getWestMovement(tractorPosition)[1], action, actionsWithMoves));
 
-		if(tractorPosition[1] != f.getColumn() - 1)
+		if(tractorPosition[1] != f.getColumn() - 1)//east
 			actionsWithMoves.add(actionsForEachMovement(mv, m.getEastMovement(tractorPosition, f)[0], m.getEastMovement(tractorPosition, f)[1], action, actionsWithMoves));
 
-		if(tractorPosition[0] != f.getRow() - 1)
+		if(tractorPosition[0] != f.getRow() - 1)//south
 			actionsWithMoves.add(actionsForEachMovement(mv, m.getSouthMovement(tractorPosition, f)[0], m.getSouthMovement(tractorPosition, f)[1], action, actionsWithMoves));
 
 		printActions(actionsWithMoves);
@@ -173,12 +178,12 @@ public class StateSpace {
 		Field auxField;
 		for(int i = 0 ; i < actionList.size(); i++){
 			auxAction = actionList.get(i);
-			auxMovement = auxAction.getMoves();
+			auxMovement = new Movement();
 			for(int j = 0; j < auxAction.getActions().size(); j++){
-				auxAction2 = auxAction.getActions().get(j);
+				auxMovement = auxAction.getMoves();
+				auxAction2 = new StateSpace(auxMovement, auxAction.getActions().get(j));
 				auxField = fieldList.get(j);
 				node = new Node(parent, auxField, strategy, auxAction2);
-				node.getAction().setMoves(auxMovement);
 				successors.add(node);			
 			}
 		}
