@@ -24,10 +24,10 @@ public class Field {
 		if((y == 0 && next[1] != 0) || (y > 0 && max - field[m.getWestMovement(tractorPosition)[0]][m.getWestMovement(tractorPosition)[1]] < next[1]))//West
 			return false;
 
-		if((y == column - 1 && next[2] != 0) || (y > column - 1 && max - field[m.getEastMovement(tractorPosition, this)[0]][m.getEastMovement(tractorPosition, this)[1]] < next[2]))//East
+		if((y == column - 1 && next[2] != 0) || (y < column - 1 && max - field[m.getEastMovement(tractorPosition, this)[0]][m.getEastMovement(tractorPosition, this)[1]] < next[2]))//East
 			return false;
 		
-		if((x == row - 1 && next[3] != 0) || (x > row - 1 && max - field[m.getSouthMovement(tractorPosition, this)[0]][m.getSouthMovement(tractorPosition, this)[1]] < next[3]))//South
+		if((x == row - 1 && next[3] != 0) || (x < row - 1 && max - field[m.getSouthMovement(tractorPosition, this)[0]][m.getSouthMovement(tractorPosition, this)[1]] < next[3]))//South
 			return false;
 
 		return true;

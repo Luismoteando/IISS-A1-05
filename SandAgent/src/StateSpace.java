@@ -5,7 +5,7 @@ public class StateSpace {
 	private int northSand, westSand, eastSand, southSand;
 	private Movement moves;
 	private StateSpace singleAction;
-	private static List<StateSpace> actions = new ArrayList<StateSpace>();
+	private static List<StateSpace> actions;
 
 
 	public StateSpace(int northSand, int westSand, int eastSand, int southSand) {
@@ -32,6 +32,7 @@ public class StateSpace {
 		int[] elements = possibilities(tractorPosition, f);
 		int n = 4;                  //Tipos para escoger
 		int r = elements.length;   //Elementos elegidos
+		actions = new ArrayList<StateSpace>();
 
 		recursiveActions(elements, "", n, r, f, tractorPosition, m);
 	}//end generateActions
@@ -59,8 +60,9 @@ public class StateSpace {
 		difference = f.getDifference(tractorPosition);
 
 		if(f.getField()[tractorPosition[0]][tractorPosition[1]] < f.getK()){
-			System.out.println("Trying to move sand from a box that is lesser than 'k' (The desired quantity)");
-			System.exit(0);
+//			System.out.println("Trying to move sand from a box that is lesser than 'k' (The desired quantity)");
+//			System.exit(0);
+			difference = 0;
 		}
 		int [] possibilities = new int[difference + 1];
 		for(int i = 0; i < possibilities.length; i++){
@@ -169,6 +171,7 @@ public class StateSpace {
 	}
 
 	public List<Node> successors(Node parent, Field state, Movement m, int[] tractorPosition, int strategy){
+		generateActions(tractorPosition, state, m);
 		List<StateSpace> actionList = actionsWithMovements(m, tractorPosition, state);
 		List<Node> successors = new ArrayList<Node>();
 		List<Field> fieldList = tryActions(m, actionList, state, tractorPosition);

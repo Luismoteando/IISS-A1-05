@@ -32,7 +32,7 @@ public class Main {
 		tp[1] = y;
 		m = new Movement(prueba);
 //		printSand();
-		StateSpace.generateActions(tp, f, m);
+//		StateSpace.generateActions(tp, f, m);
 //		compareOrderingTime();
 		strategySelection();
 
