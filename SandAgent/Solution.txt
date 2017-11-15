@@ -1,0 +1,25 @@
+Final Solution:
+Movement [1, 0]
+
+Action [northSand=0, westSand=0, eastSand=0, southSand=0]
+|3|7|
+|6|4|
+
+Movement [1, 1]
+
+Action [northSand=1, westSand=0, eastSand=0, southSand=0]
+|3|7|
+|5|5|
+
+Movement [0, 1]
+
+Action [northSand=0, westSand=0, eastSand=0, southSand=0]
+|3|7|
+|5|5|
+
+Movement [0, 0]
+
+Action [northSand=0, westSand=2, eastSand=0, southSand=0]
+|5|5|
+|5|5|
+

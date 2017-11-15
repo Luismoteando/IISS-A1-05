@@ -11,7 +11,7 @@ public class Main {
 	static Movement m;
 	static String str;	
 
-	public static void main(String[] args) throws FileNotFoundException{
+	public static void main(String[] args) throws IOException{
 
 		storeValues();
 
@@ -146,8 +146,9 @@ public class Main {
 //			System.out.println("The best option is to use a Priority Queue");
 //	}
 
-	private static void strategySelection() {
+	private static void strategySelection() throws IOException {
 		int strategy;
+		Long initialTime, finalTime;
 		StateSpace stateSpace = new StateSpace();
 		List<Node> solution = new ArrayList<Node>();
 		Problem prob = new Problem(stateSpace, f, k);
@@ -165,28 +166,43 @@ public class Main {
 		switch (strategy) {
 
 		case 1:
+			initialTime = System.nanoTime();
 			solution = boundedSearch(prob, strategy, 20);
 			printSolution(solution);
+			System.out.println((finalTime = System.nanoTime() - initialTime) / 1000000000 + " seconds lasts the BFS.");
+			
 			break;
 
 		case 2:
-			boundedSearch(prob, strategy, 20);
+			initialTime = System.nanoTime();
+			solution = boundedSearch(prob, strategy, 20);
+			printSolution(solution);
+			System.out.println((finalTime = System.nanoTime() - initialTime) / 1000000000 + " seconds lasts the DFS.");
 			break;
 			
 		case 3:
 			System.out.println("Type the maximum depth");
 			int maxDepth = scan.nextInt();
-			boundedSearch(prob, strategy, maxDepth);		
+			initialTime = System.nanoTime();
+			solution = boundedSearch(prob, strategy, maxDepth);
+			printSolution(solution);
+			System.out.println((finalTime = System.nanoTime() - initialTime) / 1000000000 + " seconds lasts the DLS.");		
 			break;
 			
 		case 4:
 			System.out.println("Type the incrementally depth");
 			int incDepth = scan.nextInt();
-			search(prob, strategy, 20, incDepth);		
+			initialTime = System.nanoTime();
+			solution = search(prob, strategy, 20, incDepth);
+			printSolution(solution);
+			System.out.println((finalTime = System.nanoTime() - initialTime) / 1000000000 + " seconds lasts the IDS.");	
 			break;
 
 		case 5:
-			boundedSearch(prob, strategy, 20);
+			initialTime = System.nanoTime();
+			solution = boundedSearch(prob, strategy, 20);
+			printSolution(solution);
+			System.out.println((finalTime = System.nanoTime() - initialTime) / 1000000000 + " seconds lasts the BFS.");
 			break;
 
 		default:				
@@ -264,28 +280,42 @@ public class Main {
 		return solution;
 	}
 	
-	public static void printSolution(List<Node> solution) {
+	public static void printSolution(List<Node> solution) throws IOException {
 		Node auxNode;
-		Field campo;
-		int[][] tierras;
+		Field newField;
+		int[][] fieldArray;
+		String route = "Solution.txt";
+		File file = new File(route);
+		@SuppressWarnings("resource")
+		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 		System.out.println("Final solution:\n");
+		bw.write("Final Solution:");
+		bw.newLine();
 		for(int i = solution.size(); i > 0; i--) {
 			auxNode = solution.get(i - 1);
-			campo = auxNode.getState();
-			tierras = campo.getField();
+			newField = auxNode.getState();
+			fieldArray = newField.getField();
+			bw.write(auxNode.getAction().getMoves().toString());
+			bw.newLine();
+			bw.write(auxNode.getAction().toString());
+			bw.newLine();
 			System.out.println(auxNode.getAction().getMoves().toString());
 			System.out.println(auxNode.getAction().toString());
-			for(int j = 0; j < tierras.length; j++) {
-				for(int k = 0; k < tierras[j].length; k++) {
-					System.out.print("|" + tierras[j][k]);									
+			System.out.println(auxNode.getCost());
+			for(int j = 0; j < fieldArray.length; j++) {
+				for(int k = 0; k < fieldArray[j].length; k++) {
+					System.out.print("|" + fieldArray[j][k]);
+					bw.write("|" + fieldArray[j][k]);
 				}
+				bw.write("|");
+		        bw.newLine();
 				System.out.print("|\n");
 			}
 			System.out.println();
+			bw.newLine();
 		}
+		bw.close();
 	}
-
-
 
 }//end Main
 

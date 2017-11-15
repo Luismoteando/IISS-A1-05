@@ -3,6 +3,7 @@ import java.util.*;
 //Leave sand
 public class StateSpace {
 	private int northSand, westSand, eastSand, southSand;
+	private static int iterator;
 	private Movement moves;
 	private StateSpace singleAction;
 	private static List<StateSpace> actions;
@@ -15,10 +16,10 @@ public class StateSpace {
 		this.southSand = southSand;
 	}
 
-	public StateSpace(Movement moves, List<StateSpace> action) {
-		this.moves = moves;
-		StateSpace.actions = action;
-	}
+//	public StateSpace(Movement moves, List<StateSpace> action) {
+//		this.moves = moves;
+//		StateSpace.actions = action;
+//	}
 
 	public StateSpace(Movement moves, StateSpace singleAction){
 		this.moves = moves;
@@ -102,21 +103,37 @@ public class StateSpace {
 		List<StateSpace> actionsWithMoves = new ArrayList<StateSpace>();
 		StateSpace action = null;
 		Movement mv = null;
-		System.out.println("\nThe list containing the valid actions is:");
+//		System.out.println("\nThe list containing the valid actions is:");
 
-		if(tractorPosition[0] != 0)//north
-			actionsWithMoves.add(actionsForEachMovement(mv, m.getNorthMovement(tractorPosition)[0], m.getNorthMovement(tractorPosition)[1], action, actionsWithMoves));
+		if(tractorPosition[0] != 0) {//north
+			iterator = 0;
+			while(actions.size() != iterator) {
+				actionsWithMoves.add(actionsForEachMovement(mv, m.getNorthMovement(tractorPosition)[0], m.getNorthMovement(tractorPosition)[1], action, actionsWithMoves));
+			}
+		}
 
-		if(tractorPosition[1] != 0)//west
-			actionsWithMoves.add(actionsForEachMovement(mv, m.getWestMovement(tractorPosition)[0], m.getWestMovement(tractorPosition)[1], action, actionsWithMoves));
-
-		if(tractorPosition[1] != f.getColumn() - 1)//east
-			actionsWithMoves.add(actionsForEachMovement(mv, m.getEastMovement(tractorPosition, f)[0], m.getEastMovement(tractorPosition, f)[1], action, actionsWithMoves));
-
-		if(tractorPosition[0] != f.getRow() - 1)//south
-			actionsWithMoves.add(actionsForEachMovement(mv, m.getSouthMovement(tractorPosition, f)[0], m.getSouthMovement(tractorPosition, f)[1], action, actionsWithMoves));
-
-		printActions(actionsWithMoves);
+		if(tractorPosition[1] != 0) {//west
+			iterator = 0;
+			while(actions.size() != iterator) {
+				actionsWithMoves.add(actionsForEachMovement(mv, m.getWestMovement(tractorPosition)[0], m.getWestMovement(tractorPosition)[1], action, actionsWithMoves));
+			}
+		}
+		
+		if(tractorPosition[1] != f.getColumn() - 1) {//east
+			iterator = 0;
+			while(actions.size() != iterator) {
+				actionsWithMoves.add(actionsForEachMovement(mv, m.getEastMovement(tractorPosition, f)[0], m.getEastMovement(tractorPosition, f)[1], action, actionsWithMoves));
+			}
+		}
+		
+		if(tractorPosition[0] != f.getRow() - 1) {//south
+			iterator = 0;
+			while(actions.size() != iterator) {
+				actionsWithMoves.add(actionsForEachMovement(mv, m.getSouthMovement(tractorPosition, f)[0], m.getSouthMovement(tractorPosition, f)[1], action, actionsWithMoves));
+			}
+		}
+		
+//		printActions(actionsWithMoves);
 		return actionsWithMoves;		
 	}
 
@@ -125,7 +142,12 @@ public class StateSpace {
 		moves[0] = hor;
 		moves[1] = ver;
 		mv = new Movement(moves);
-		action = new StateSpace(mv, actions);		
+		action = new StateSpace(mv, actions.get(iterator));
+		action.setNorthSand(actions.get(iterator).getNorthSand());
+		action.setWestSand(actions.get(iterator).getWestSand());
+		action.setEastSand(actions.get(iterator).getEastSand());
+		action.setSouthSand(actions.get(iterator).getSouthSand());
+		iterator++;
 		return action;		
 	}
 
@@ -156,16 +178,16 @@ public class StateSpace {
 				auxField = new Field(mv.getHorizontal(), mv.getVertical(), possible, f.getK(), f.getMax());
 				fieldList.add(auxField);
 
-				System.out.println(mv.toString());
-				for(int x = 0; x < possible.length; x++){
-					for(int y = 0; y < possible[x].length; y++){
-						System.out.print("|" + possible[x][y]);
-					}
-					System.out.print("|\n");
-				}
+//				System.out.println(mv.toString());
+//				for(int x = 0; x < possible.length; x++){
+//					for(int y = 0; y < possible[x].length; y++){
+//						System.out.print("|" + possible[x][y]);
+//					}
+//					System.out.print("|\n");
+//				}
 			}
 		}//end for
-		System.out.print("\n");
+//		System.out.print("\n");
 
 		return fieldList;		
 	}
@@ -185,6 +207,10 @@ public class StateSpace {
 			for(int j = 0; j < auxAction.getActions().size(); j++){
 				auxMovement = auxAction.getMoves();
 				auxAction2 = new StateSpace(auxMovement, auxAction.getActions().get(j));
+				auxAction2.setNorthSand(auxAction.getNorthSand());
+				auxAction2.setWestSand(auxAction.getWestSand());
+				auxAction2.setEastSand(auxAction.getEastSand());
+				auxAction2.setSouthSand(auxAction.getSouthSand());
 				auxField = fieldList.get(j);
 				node = new Node(parent, auxField, strategy, auxAction2);
 				successors.add(node);			
@@ -214,6 +240,10 @@ public class StateSpace {
 		}
 		return true;
 	}	
+	
+	public int totalSand(StateSpace action) {
+		return action.getEastSand() + action.getNorthSand() + action.getSouthSand() + action.getWestSand();
+	}
 
 	public int getNorthSand() {
 		return northSand;
