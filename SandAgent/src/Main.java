@@ -149,6 +149,10 @@ public class Main {
 	private static void strategySelection() throws IOException {
 		int strategy;
 		Long initialTime, finalTime;
+		String route = "Solution.txt";
+		File file = new File(route);
+		@SuppressWarnings("resource")
+		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 		StateSpace stateSpace = new StateSpace();
 		List<Node> solution = new ArrayList<Node>();
 		Problem prob = new Problem(stateSpace, f, k);
@@ -168,16 +172,21 @@ public class Main {
 		case 1:
 			initialTime = System.nanoTime();
 			solution = boundedSearch(prob, strategy, 20);
-			printSolution(solution);
-			System.out.println((finalTime = System.nanoTime() - initialTime) / 1000000000 + " seconds lasts the BFS.");
-			
+			printSolution(solution, bw);
+			finalTime = (System.nanoTime() - initialTime) / 1000000000;
+			System.out.println(finalTime + " seconds lasts the BFS.");
+			bw.write(finalTime + " seconds lasts the BFS.");
+			bw.newLine();
 			break;
 
 		case 2:
 			initialTime = System.nanoTime();
 			solution = boundedSearch(prob, strategy, 20);
-			printSolution(solution);
-			System.out.println((finalTime = System.nanoTime() - initialTime) / 1000000000 + " seconds lasts the DFS.");
+			printSolution(solution, bw);
+			finalTime = (System.nanoTime() - initialTime) / 1000000000;
+			System.out.println(finalTime + " seconds lasts the DFS.");
+			bw.write(finalTime + " seconds lasts the DFS.");
+			bw.newLine();
 			break;
 			
 		case 3:
@@ -185,8 +194,11 @@ public class Main {
 			int maxDepth = scan.nextInt();
 			initialTime = System.nanoTime();
 			solution = boundedSearch(prob, strategy, maxDepth);
-			printSolution(solution);
-			System.out.println((finalTime = System.nanoTime() - initialTime) / 1000000000 + " seconds lasts the DLS.");		
+			printSolution(solution, bw);
+			finalTime = (System.nanoTime() - initialTime) / 1000000000;
+			System.out.println(finalTime + " seconds lasts the DLS.");
+			bw.write(finalTime + " seconds lasts the DLS.");
+			bw.newLine();
 			break;
 			
 		case 4:
@@ -194,22 +206,30 @@ public class Main {
 			int incDepth = scan.nextInt();
 			initialTime = System.nanoTime();
 			solution = search(prob, strategy, 20, incDepth);
-			printSolution(solution);
-			System.out.println((finalTime = System.nanoTime() - initialTime) / 1000000000 + " seconds lasts the IDS.");	
+			printSolution(solution, bw);
+			finalTime = (System.nanoTime() - initialTime) / 1000000000;
+			System.out.println(finalTime + " seconds lasts the IDS.");
+			bw.write(finalTime + " seconds lasts the IDS.");
+			bw.newLine();
 			break;
 
 		case 5:
 			initialTime = System.nanoTime();
 			solution = boundedSearch(prob, strategy, 20);
-			printSolution(solution);
-			System.out.println((finalTime = System.nanoTime() - initialTime) / 1000000000 + " seconds lasts the BFS.");
+			printSolution(solution, bw);
+			finalTime = (System.nanoTime() - initialTime) / 1000000000;
+			System.out.println(finalTime + " seconds lasts the UCS.");
+			bw.write(finalTime + " seconds lasts the BFS.");
+			bw.newLine();
 			break;
 
 		default:				
 			System.out.println("Wrong character! Type a number from 1 to 3.");
 			strategySelection();
 
-		}		
+		}
+
+		bw.close();	
 	}
 
 	private static List<Node> boundedSearch(Problem prob, int strategy, int maxDepth){
@@ -222,7 +242,6 @@ public class Main {
 		StateSpace initialAction = new StateSpace();
 		Movement moves = new Movement(tractorPosition);
 		Node initialNode = new Node(parent, prob.getField(), strategy, initialAction);
-		initialNode.setCost(0);
 		initialNode.setDepth(0);
 		initialNode.setValue(0);
 		initialNode.getAction().setMoves(moves);
@@ -280,14 +299,10 @@ public class Main {
 		return solution;
 	}
 	
-	public static void printSolution(List<Node> solution) throws IOException {
+	public static void printSolution(List<Node> solution, BufferedWriter bw) throws IOException {
 		Node auxNode;
 		Field newField;
 		int[][] fieldArray;
-		String route = "Solution.txt";
-		File file = new File(route);
-		@SuppressWarnings("resource")
-		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 		System.out.println("Final solution:\n");
 		bw.write("Final Solution:");
 		bw.newLine();
@@ -296,11 +311,10 @@ public class Main {
 			newField = auxNode.getState();
 			fieldArray = newField.getField();
 			bw.write(auxNode.getAction().getMoves().toString());
-			bw.newLine();
 			bw.write(auxNode.getAction().toString());
 			bw.newLine();
 			System.out.println(auxNode.getAction().getMoves().toString());
-			System.out.println(auxNode.getAction().toString());
+//			System.out.println(auxNode.getAction().getActions().get(0).getActions().toString());
 			System.out.println(auxNode.getCost());
 			for(int j = 0; j < fieldArray.length; j++) {
 				for(int k = 0; k < fieldArray[j].length; k++) {
@@ -314,7 +328,6 @@ public class Main {
 			System.out.println();
 			bw.newLine();
 		}
-		bw.close();
 	}
 
 }//end Main

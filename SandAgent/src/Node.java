@@ -15,14 +15,17 @@ public class Node implements Comparable<Node>{
 		this.parent = parent;
 		this.state = state;
 		this.action = action;
-		this.cost = parent.getCost() + action.totalSand(action) + 1;
+		if(parent.getParent() == null)
+			this.cost = 0;
+		else
+			this.cost = parent.getCost() + action.totalSand(action) + 1;
 		this.depth = parent.getDepth() + 1;
 		if(strategy == 1)
-			this.value = this.depth;
+			this.value = depth;
 		if(strategy == 2 || strategy == 3 || strategy == 4)
-			this.value = -(this.depth);
+			this.value = -depth;
 		if(strategy == 5)
-			this.value = this.cost;
+			this.value = cost;
 	}
 	
 	public int compareTo(Node node){
