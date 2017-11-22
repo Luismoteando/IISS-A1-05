@@ -7,7 +7,6 @@ public class StateSpace {
 	private StateSpace singleAction;
 	private static List<StateSpace> actions;
 
-
 	public StateSpace(int northSand, int westSand, int eastSand, int southSand) {
 		this.northSand = northSand;
 		this.westSand = westSand;
@@ -53,7 +52,7 @@ public class StateSpace {
 				recursiveActions(elem, act + elem[i], n - 1, r, f, tractorPosition, m);
 			}
 		}
-	}//end Perm1
+	}//end recursiveActions
 
 	public static int[] possibilities(int[] tractorPosition, Field f){
 		int difference;
@@ -131,29 +130,27 @@ public class StateSpace {
 
 	public static List<Field> tryActions(Movement m, List<StateSpace> a, Field f, int[] tractorPosition){
 		StateSpace auxAction, act;
-		Movement mv;
 		List<Field> fieldList= new ArrayList<Field>();
 		Field auxField;
 		for(int i = 0; i < a.size(); i++){
 			auxAction = a.get(i);
-			mv = auxAction.getMoves();
 			for(int j = 0; j < auxAction.getActions().size(); j++){
 				int[][] possible = createPossibleField(f);
 				possible[tractorPosition[0]][tractorPosition[1]] = possible[tractorPosition[0]][tractorPosition[1]] - f.getDifference(tractorPosition);
 				act = auxAction.getActions().get(j);
 				if(act.getNorthSand() != 0)
-					possible[m.getNorthMovement(tractorPosition)[0]][m.getNorthMovement(tractorPosition)[1]] = possible[m.getNorthMovement(tractorPosition)[0]][m.getNorthMovement(tractorPosition)[1]] + act.getNorthSand();		
+					possible[m.getNorthMovement(tractorPosition)[0]][m.getNorthMovement(tractorPosition)[1]] += act.getNorthSand();		
 
 				if(act.getWestSand() != 0)
-					possible[m.getWestMovement(tractorPosition)[0]][m.getWestMovement(tractorPosition)[1]] = possible[m.getWestMovement(tractorPosition)[0]][m.getWestMovement(tractorPosition)[1]] + act.getWestSand();	
+					possible[m.getWestMovement(tractorPosition)[0]][m.getWestMovement(tractorPosition)[1]] += act.getWestSand();	
 
 				if(act.getEastSand() != 0)
-					possible[m.getEastMovement(tractorPosition, f)[0]][m.getEastMovement(tractorPosition, f)[1]] = possible[m.getEastMovement(tractorPosition, f)[0]][m.getEastMovement(tractorPosition, f)[1]] + act.getEastSand();
+					possible[m.getEastMovement(tractorPosition, f)[0]][m.getEastMovement(tractorPosition, f)[1]] += act.getEastSand();
 
 				if(act.getSouthSand() != 0)
-					possible[m.getSouthMovement(tractorPosition, f)[0]][m.getSouthMovement(tractorPosition, f)[1]] = possible[m.getSouthMovement(tractorPosition, f)[0]][m.getSouthMovement(tractorPosition, f)[1]] + act.getSouthSand();
+					possible[m.getSouthMovement(tractorPosition, f)[0]][m.getSouthMovement(tractorPosition, f)[1]] += act.getSouthSand();
 
-				auxField = new Field(mv.getHorizontal(), mv.getVertical(), possible, f.getK(), f.getMax());
+				auxField = new Field(f.getColumn(), f.getRow(), possible, f.getK(), f.getMax());
 				fieldList.add(auxField);
 
 //				System.out.println(mv.toString());
@@ -170,7 +167,7 @@ public class StateSpace {
 		return fieldList;		
 	}
 
-	public List<Node> successors(Node parent, Field state, Movement m, int[] tractorPosition, int strategy){
+	public List<Node> successors(Node parent, Field state, Movement m, int[] tractorPosition, int strategy, int maxDepth){
 		generateActions(tractorPosition, state, m);
 		List<StateSpace> actionList = actionsWithMovements(m, tractorPosition, state);
 		List<Node> successors = new ArrayList<Node>();
@@ -187,7 +184,8 @@ public class StateSpace {
 				auxAction2 = new StateSpace(auxMovement, auxAction.getActions().get(j));
 				auxField = fieldList.get(j);
 				node = new Node(parent, auxField, strategy, auxAction2);
-				successors.add(node);			
+				if(node.getDepth() <= maxDepth)
+					successors.add(node);			
 			}
 		}
 
@@ -215,14 +213,16 @@ public class StateSpace {
 		return true;
 	}	
 	
-	public int totalSand(StateSpace action) {
+	public int totalSand() {
 		int sand[] = new int [4];
-		sand[0] = action.getActions().get(0).getActions().get(0).getNorthSand();
-		sand[1] = action.getActions().get(0).getActions().get(0).getWestSand();
-		sand[2] = action.getActions().get(0).getActions().get(0).getEastSand();
-		sand[3] = action.getActions().get(0).getActions().get(0).getSouthSand();
+		sand[0] = this.getActions().get(0).getActions().get(0).getNorthSand();
+		sand[1] = this.getActions().get(0).getActions().get(0).getWestSand();
+		sand[2] = this.getActions().get(0).getActions().get(0).getEastSand();
+		sand[3] = this.getActions().get(0).getActions().get(0).getSouthSand();
 		return sand[0] + sand[1] + sand[2] + sand[3];
 	}
+	
+	//////////////////////////////////////////////////////////Compute here the heuristic/////////////////////////////////////////////////////////
 
 	public int getNorthSand() {
 		return northSand;

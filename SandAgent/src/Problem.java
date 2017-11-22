@@ -19,8 +19,8 @@ public class Problem {
 		return action;
 	}	
 	
-	public List<Node> successors(Node parent, Field state, Movement m, int[] tractorPosition, int strategy){
-		return action.successors(parent, state, m, tractorPosition, strategy);
+	public List<Node> successors(Node parent, Field state, Movement m, int[] tractorPosition, int strategy, int maxDepth){
+		return action.successors(parent, state, m, tractorPosition, strategy, maxDepth);
 	}
 
 	public Field getField() {

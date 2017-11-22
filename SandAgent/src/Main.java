@@ -10,6 +10,7 @@ public class Main {
 	static int[] tp = new int [2];
 	static Movement m;
 	static String str;	
+	static int spatialComplexity;
 
 	public static void main(String[] args) throws IOException{
 
@@ -162,10 +163,11 @@ public class Main {
 				+ "2. Depth-first search\n"
 				+ "3. Depth-limit search\n"
 				+ "4. Iterative-depth search\n"
-				+ "5. Uniform-cost search\n");
+				+ "5. Uniform-cost search\n"
+				+ "6. A* search\n");
 
 		scan = new Scanner(System.in);
-
+///////////////////////////////////////////////Meter límite/////////////////////////////////////////////////
 		strategy = scan.nextInt();
 		switch (strategy) {
 
@@ -174,8 +176,8 @@ public class Main {
 			solution = boundedSearch(prob, strategy, 20);
 			printSolution(solution, bw);
 			finalTime = (System.nanoTime() - initialTime) / 1000000000;
-			System.out.println(finalTime + " seconds lasts the BFS.");
-			bw.write(finalTime + " seconds lasts the BFS.");
+			System.out.println("The temporal complexity for BFS is: " + finalTime + " seconds.");
+			bw.write("The temporal complexity for BFS is: " + finalTime + " seconds.");
 			bw.newLine();
 			break;
 
@@ -184,8 +186,8 @@ public class Main {
 			solution = boundedSearch(prob, strategy, 20);
 			printSolution(solution, bw);
 			finalTime = (System.nanoTime() - initialTime) / 1000000000;
-			System.out.println(finalTime + " seconds lasts the DFS.");
-			bw.write(finalTime + " seconds lasts the DFS.");
+			System.out.println("The temporal complexity for DFS is: " + finalTime + " seconds.");
+			bw.write("The temporal complexity for DFS is: " + finalTime + " seconds.");
 			bw.newLine();
 			break;
 			
@@ -196,8 +198,8 @@ public class Main {
 			solution = boundedSearch(prob, strategy, maxDepth);
 			printSolution(solution, bw);
 			finalTime = (System.nanoTime() - initialTime) / 1000000000;
-			System.out.println(finalTime + " seconds lasts the DLS.");
-			bw.write(finalTime + " seconds lasts the DLS.");
+			System.out.println("The temporal complexity for DLS is: " + finalTime + " seconds.");
+			bw.write("The temporal complexity for DLS is: " + finalTime + " seconds.");
 			bw.newLine();
 			break;
 			
@@ -208,8 +210,8 @@ public class Main {
 			solution = search(prob, strategy, 20, incDepth);
 			printSolution(solution, bw);
 			finalTime = (System.nanoTime() - initialTime) / 1000000000;
-			System.out.println(finalTime + " seconds lasts the IDS.");
-			bw.write(finalTime + " seconds lasts the IDS.");
+			System.out.println("The temporal complexity for IDS is: " + finalTime + " seconds.");
+			bw.write("The temporal complexity for IDS is: " + finalTime + " seconds.");
 			bw.newLine();
 			break;
 
@@ -218,8 +220,18 @@ public class Main {
 			solution = boundedSearch(prob, strategy, 20);
 			printSolution(solution, bw);
 			finalTime = (System.nanoTime() - initialTime) / 1000000000;
-			System.out.println(finalTime + " seconds lasts the UCS.");
-			bw.write(finalTime + " seconds lasts the BFS.");
+			System.out.println("The temporal complexity for UCS is: " + finalTime + " seconds.");
+			bw.write("The temporal complexity for UCS is: " + finalTime + " seconds.");
+			bw.newLine();
+			break;
+			
+		case 6:
+			initialTime = System.nanoTime();
+			solution = boundedSearch(prob, strategy, 20);
+			printSolution(solution, bw);
+			finalTime = (System.nanoTime() - initialTime) / 1000000000;
+			System.out.println("The temporal complexity for A* is: " + finalTime + " seconds.");
+			bw.write("The temporal complexity for A* is: " + finalTime + " seconds.");
 			bw.newLine();
 			break;
 
@@ -263,11 +275,11 @@ public class Main {
 					tractorPosition[0] = actual.getAction().getMoves().getVertical();
 					tractorPosition[1] = actual.getAction().getMoves().getHorizontal();
 				}
-				actual.getState().setColumn(column);
-				actual.getState().setRow(row);
-				successorList = prob.successors(actual, actual.getState(), actual.getAction().getMoves(), tractorPosition, strategy);
-				for(int i = 0; i < successorList.size(); i++)
+				successorList = prob.successors(actual, actual.getState(), actual.getAction().getMoves(), tractorPosition, strategy, maxDepth);
+				for(int i = 0; i < successorList.size(); i++) {
+					spatialComplexity++;
 					front.insertInQueue(successorList.get(i));
+				}
 			}
 		}
 
@@ -311,11 +323,16 @@ public class Main {
 			newField = auxNode.getState();
 			fieldArray = newField.getField();
 			bw.write(auxNode.getAction().getMoves().toString());
-			bw.write(auxNode.getAction().toString());
+//			bw.write(auxNode.getAction().toString());
 			bw.newLine();
 			System.out.println(auxNode.getAction().getMoves().toString());
-//			System.out.println(auxNode.getAction().getActions().get(0).getActions().toString());
-			System.out.println(auxNode.getCost());
+//			System.out.println(auxNode.getAction().getActions().get(0).getActions().get(0).getNorthSand());
+//			System.out.println(auxNode.getAction().getActions().get(0).getActions().get(0).getWestSand());
+//			System.out.println(auxNode.getAction().getActions().get(0).getActions().get(0).getEastSand());
+//			System.out.println(auxNode.getAction().getActions().get(0).getActions().get(0).getSouthSand());
+			System.out.println("Cost of the action: " + auxNode.getCost());
+			bw.write("Cost of the action: " +auxNode.getCost());
+			bw.newLine();
 			for(int j = 0; j < fieldArray.length; j++) {
 				for(int k = 0; k < fieldArray[j].length; k++) {
 					System.out.print("|" + fieldArray[j][k]);
@@ -328,6 +345,12 @@ public class Main {
 			System.out.println();
 			bw.newLine();
 		}
+		System.out.println("Total cost of the search: " + solution.get(0).getCost());
+		System.out.println("Spatial complexity: " + spatialComplexity);
+		bw.write("Total cost of the search: " + solution.get(0).getCost());
+		bw.newLine();
+		bw.write("Spatial complexity: " + spatialComplexity);
+		bw.newLine();
 	}
 
 }//end Main
