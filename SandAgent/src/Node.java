@@ -27,15 +27,23 @@ public class Node implements Comparable<Node>{
 		if(strategy == 5)
 			this.value = cost;
 		if(strategy == 6)
-			this.value = cost + heuristic(action);
+			this.value = cost + heuristic();
 	}
 	
-	public int heuristic(StateSpace action) {
+	public int heuristic() {
 		//Define if the visited list is of states or nodes (nodes need more bytes)
 		//When inserting nodes, we have to compare if the frontier already have the state and compare the values taking the best one
-		//the solution for A* and UCS must be the same
+		//the cost for A* and UCS must be the same
 		//the time of A* is less that the UCS one
-		return 0;
+		int number = 0;
+		int[][] camp = state.getField();
+		for (int i=0; i < camp.length; i++) {
+			for (int j=0; j < camp[i].length; j++) {
+				if(camp[i][j] != state.getK())
+					number++;
+			}
+		}
+		return number;
 		
 	}
 	
