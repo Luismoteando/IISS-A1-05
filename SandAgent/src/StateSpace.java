@@ -221,10 +221,6 @@ public class StateSpace {
 		sand[3] = this.getActions().get(0).getActions().get(0).getSouthSand();
 		return sand[0] + sand[1] + sand[2] + sand[3];
 	}
-	
-	public int getActionSouthSand() {
-		return this.getActions().get(0).getActions().get(0).getSouthSand();
-	}
 
 	public int getNorthSand() {
 		return northSand;

@@ -30,10 +30,6 @@ public class Node implements Comparable<Node>{
 			this.value = cost + heuristic();
 	}
 	
-	public int getSouthSand() {
-		return this.getAction().getActionSouthSand();
-	}
-	
 	public int heuristic() {
 		//Define if the visited list is of states or nodes (nodes need more bytes)
 		//When inserting nodes, we have to compare if the frontier already have the state and compare the values taking the best one
