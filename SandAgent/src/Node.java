@@ -30,21 +30,24 @@ public class Node implements Comparable<Node>{
 			this.value = cost + heuristic();
 	}
 	
+	public int getSouthSand() {
+		return this.getAction().getActionSouthSand();
+	}
+	
 	public int heuristic() {
 		//Define if the visited list is of states or nodes (nodes need more bytes)
 		//When inserting nodes, we have to compare if the frontier already have the state and compare the values taking the best one
 		//the cost for A* and UCS must be the same
 		//the time of A* is less that the UCS one
-		int number = 0;
-		int[][] camp = state.getField();
-		for (int i=0; i < camp.length; i++) {
-			for (int j=0; j < camp[i].length; j++) {
-				if(camp[i][j] != state.getK())
-					number++;
+		int heuristic = 0;
+		int[][] field = state.getField();
+		for (int i=0; i < field.length; i++) {
+			for (int j=0; j < field[i].length; j++) {
+				if(field[i][j] != state.getK())
+					heuristic++;
 			}
 		}
-		return number;
-		
+		return heuristic;		
 	}
 	
 	public int compareTo(Node node){

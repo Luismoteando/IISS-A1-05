@@ -35,6 +35,8 @@ public class Field {
 	
 
 	public int getDifference(int[] tractorPosition){
+		if((field[tractorPosition[0]][tractorPosition[1]] - k) < 0)
+			return 0;
 		return field[tractorPosition[0]][tractorPosition[1]] - k;
 	}
 

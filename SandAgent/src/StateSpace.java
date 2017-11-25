@@ -3,7 +3,7 @@ import java.util.*;
 //Leave sand
 public class StateSpace {
 	private int northSand, westSand, eastSand, southSand;
-	private Movement moves;
+	private Movement move;
 	private StateSpace singleAction;
 	private static List<StateSpace> actions;
 
@@ -14,13 +14,13 @@ public class StateSpace {
 		this.southSand = southSand;
 	}
 
-	public StateSpace(Movement moves, List<StateSpace> action) {
-		this.moves = moves;
+	public StateSpace(Movement move, List<StateSpace> action) {
+		this.move = move;
 		StateSpace.actions = action;
 	}
 
-	public StateSpace(Movement moves, StateSpace singleAction){
-		this.moves = moves;
+	public StateSpace(Movement move, StateSpace singleAction){
+		this.move = move;
 		this.setSingleAction(singleAction);
 	}
 
@@ -58,11 +58,11 @@ public class StateSpace {
 		int difference;
 		difference = f.getDifference(tractorPosition);
 
-		if(f.getField()[tractorPosition[0]][tractorPosition[1]] < f.getK()){
-//			System.out.println("Trying to move sand from a box that is lesser than 'k' (The desired quantity)");
-//			System.exit(0);
-			difference = 0;
-		}
+//		if(f.getField()[tractorPosition[0]][tractorPosition[1]] < f.getK()){
+////			System.out.println("Trying to move sand from a box that is lesser than 'k' (The desired quantity)");
+////			System.exit(0);
+//			difference = 0;
+//		}
 		int [] possibilities = new int[difference + 1];
 		for(int i = 0; i < possibilities.length; i++){
 			possibilities[i] = difference - i;
@@ -222,7 +222,9 @@ public class StateSpace {
 		return sand[0] + sand[1] + sand[2] + sand[3];
 	}
 	
-	//////////////////////////////////////////////////////////Compute here the heuristic/////////////////////////////////////////////////////////
+	public int getActionSouthSand() {
+		return this.getActions().get(0).getActions().get(0).getSouthSand();
+	}
 
 	public int getNorthSand() {
 		return northSand;
@@ -257,11 +259,11 @@ public class StateSpace {
 	}
 
 	public Movement getMoves() {
-		return moves;
+		return move;
 	}
 
 	public void setMoves(Movement moves) {
-		this.moves = moves;
+		this.move = moves;
 	}
 
 	public List<StateSpace> getActions() {
@@ -292,7 +294,7 @@ public class StateSpace {
 	}
 	
 	public String printWithMoves(){
-		return moves.toString() + actions.toString();
+		return move.toString() + actions.toString();
 	}
 
 

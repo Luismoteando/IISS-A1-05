@@ -313,7 +313,8 @@ public class Main {
 	
 	public static void printSolution(List<Node> solution, BufferedWriter bw) throws IOException {
 		Node auxNode;
-		Field newField;
+		Field newField, auxField = null;
+		Movement auxMovement = null;
 		int[][] fieldArray;
 		System.out.println("Final solution:\n");
 		bw.write("Final Solution:");
@@ -326,10 +327,14 @@ public class Main {
 //			bw.write(auxNode.getAction().toString());
 			bw.newLine();
 			System.out.println(auxNode.getAction().getMoves().toString());
-//			System.out.println(auxNode.getAction().getActions().get(0).getActions().get(0).getNorthSand());
-//			System.out.println(auxNode.getAction().getActions().get(0).getActions().get(0).getWestSand());
-//			System.out.println(auxNode.getAction().getActions().get(0).getActions().get(0).getEastSand());
-//			System.out.println(auxNode.getAction().getActions().get(0).getActions().get(0).getSouthSand());
+			if(auxField == null)
+				System.out.println("\nAction [northSand=0, westSand=0, eastSand=0, southSand=0]");
+			else
+				System.out.println(solutionActions(auxField, newField, auxMovement));
+//			System.out.println("South: " + auxNode.getSouthSand());
+//			System.out.println("West: " + auxNode.getAction().getActions().get(0).getActions().get(0).getWestSand());
+//			System.out.println("East: " + auxNode.getAction().getActions().get(0).getActions().get(0).getEastSand());
+//			System.out.println("South: " + auxNode.getAction().getActions().get(0).getActions().get(0).getSouthSand());
 			System.out.println("Cost of the action: " + auxNode.getCost());
 			bw.write("Cost of the action: " +auxNode.getCost());
 			bw.newLine();
@@ -344,13 +349,50 @@ public class Main {
 			}
 			System.out.println();
 			bw.newLine();
+			
+			auxField = newField;
+			auxMovement = auxNode.getAction().getMoves();
 		}
+
+		System.out.println("Total depth of the search: " + (solution.get(0).getDepth() + 1));
 		System.out.println("Total cost of the search: " + solution.get(0).getCost());
 		System.out.println("Spatial complexity: " + spatialComplexity);
 		bw.write("Total cost of the search: " + solution.get(0).getCost());
 		bw.newLine();
 		bw.write("Spatial complexity: " + spatialComplexity);
 		bw.newLine();
+	}
+	
+	public static String solutionActions(Field parentField, Field currentField, Movement parentMovement) {
+		int vertical = parentMovement.getVertical();
+		int horizontal = parentMovement.getHorizontal();
+		int[] moves = {vertical, horizontal};
+		int childSand;
+		int parentSand;
+		int northSand = 0, westSand = 0, eastSand = 0, southSand = 0;
+		if(vertical != 0) {
+			parentSand = parentField.getField()[parentMovement.getNorthMovement(moves)[0]][parentMovement.getNorthMovement(moves)[1]];
+			childSand = currentField.getField()[parentMovement.getNorthMovement(moves)[0]][parentMovement.getNorthMovement(moves)[1]];
+			northSand = childSand - parentSand;	
+		}
+		if(horizontal != 0) {
+			parentSand = parentField.getField()[parentMovement.getWestMovement(moves)[0]][parentMovement.getWestMovement(moves)[1]];
+			childSand = currentField.getField()[parentMovement.getWestMovement(moves)[0]][parentMovement.getWestMovement(moves)[1]];
+			westSand = childSand - parentSand;	
+		}
+		if(horizontal != column - 1) {
+			parentSand = parentField.getField()[parentMovement.getEastMovement(moves, parentField)[0]][parentMovement.getEastMovement(moves, parentField)[1]];
+			childSand = currentField.getField()[parentMovement.getEastMovement(moves, parentField)[0]][parentMovement.getEastMovement(moves, parentField)[1]];
+			eastSand = childSand - parentSand;	
+		}
+		if(vertical != row - 1) {
+			parentSand = parentField.getField()[parentMovement.getSouthMovement(moves, parentField)[0]][parentMovement.getSouthMovement(moves, parentField)[1]];
+			childSand = currentField.getField()[parentMovement.getSouthMovement(moves, parentField)[0]][parentMovement.getSouthMovement(moves, parentField)[1]];
+			southSand = childSand - parentSand;	
+		}
+			
+		return "\nAction [northSand=" + northSand + ", westSand=" + westSand + ", eastSand=" + eastSand + ", southSand="
+		+ southSand + "]";
 	}
 
 }//end Main
