@@ -2,15 +2,12 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static int x = 0, y = 0, k = 0, max = 0, column = 0,row = 0;
-	static int[] prueba = {1, 2};
-	static int [][] field;
-	static Scanner scan;
-	static Field f;
-	static int[] tp = new int [2];
-	static Movement m;
-	static String str;	
-	static int spatialComplexity;
+	private static int x = 0, y = 0, k = 0, max = 0, column = 0,row = 0;
+	private static int [][] field;
+	private static Scanner scan;
+	private static Field f;
+	private static int spatialComplexity;
+	static Hashtable<Field, Integer> hashTable = new Hashtable<Field, Integer>();
 
 	public static void main(String[] args) throws IOException{
 
@@ -29,19 +26,14 @@ public class Main {
 		printField();
 
 		f = new Field(column, row, field, k, max);
-		tp[0] = x;
-		tp[1] = y;
-		m = new Movement(prueba);
-//		printSand();
-//		StateSpace.generateActions(tp, f, m);
-//		compareOrderingTime();
+		//		printSand();
 		strategySelection();
 
 	}//end main
 
 	public static void storeValues() throws FileNotFoundException{
 
-		scan = new Scanner(new FileReader("Problema.dat"));
+		scan = new Scanner(new FileReader("SandAgent.txt"));
 		boolean aux = false;
 		do{
 			try{
@@ -84,176 +76,168 @@ public class Main {
 		}//end for
 	}//end printField
 
-//	public static void printSand(){
-//		System.out.println("\nList of successors:");
-//
-//		if(x != 0)
-//			System.out.println("North: " + "[" + m.getNorthMovement(t)[0] + ", " + m.getNorthMovement(t)[1] + "]" + " // Sand amount: " + f.getField()[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]]);
-//		if(y != 0)
-//			System.out.println("West: " + "[" + m.getWestMovement(t)[0] + ", " + m.getWestMovement(t)[1] + "]" + " // Sand amount: " + f.getField()[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]]);
-//		if(y != column - 1)
-//			System.out.println("East: " + "[" + m.getEastMovement(t, f)[0] + ", " + m.getEastMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]]);
-//		if(x != row - 1)
-//			System.out.println("South: " + "[" + m.getSouthMovement(t, f)[0] + ", " + m.getSouthMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]]);
-//	}//end printSand
+	//	public static void printSand(){
+	//		System.out.println("\nList of successors:");
+	//
+	//		if(x != 0)
+	//			System.out.println("North: " + "[" + m.getNorthMovement(t)[0] + ", " + m.getNorthMovement(t)[1] + "]" + " // Sand amount: " + f.getField()[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]]);
+	//		if(y != 0)
+	//			System.out.println("West: " + "[" + m.getWestMovement(t)[0] + ", " + m.getWestMovement(t)[1] + "]" + " // Sand amount: " + f.getField()[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]]);
+	//		if(y != column - 1)
+	//			System.out.println("East: " + "[" + m.getEastMovement(t, f)[0] + ", " + m.getEastMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]]);
+	//		if(x != row - 1)
+	//			System.out.println("South: " + "[" + m.getSouthMovement(t, f)[0] + ", " + m.getSouthMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]]);
+	//	}//end printSand
 
-//	public static void compareOrderingTime(){
-//		Long initialTime, finalTimeList, finalTimeQueue;
-//		int size;
-//		Node parent = new Node(f);
-//		Node auxNode;
-//		Frontier frontList = new Frontier();
-//		Frontier frontQueue = new Frontier();
-//		StateSpace action = new StateSpace();
-//		List<Node> actionList;
-//		actionList = action.successors(parent, m, t, f);
-//
-//		//Ordering List
-//		frontList.createFrontierList();
-//
-//		initialTime = System.nanoTime();
-//		for(int i = 0; i < actionList.size(); i++){
-//			auxNode = actionList.get(i);
-//			frontList.insertInList(auxNode);
-//
-//		}
-//		finalTimeList = System.nanoTime() - initialTime;
-//		System.out.println("Linked list");
-//		for(int i = 0; i < frontList.getFrontierList().size(); i++){
-//			auxNode = frontList.getFrontierList().get(i);
-//			System.out.println(auxNode.toString2());
-//
-//		}
-//
-//		//Ordering Queue
-//		frontQueue.createFrontierQueue();
-//		initialTime = System.nanoTime();
-//		for(int i = 0; i < actionList.size(); i++){
-//			auxNode = actionList.get(i);
-//			frontQueue.insertInQueue(auxNode);
-//		}
-//		finalTimeQueue = System.nanoTime() - initialTime;
-//		System.out.println("Priority Queue");
-//		size = frontQueue.getFrontierQueue().size();
-//		for(int i = 0; i < size; i++){
-//			auxNode = frontQueue.getFrontierQueue().remove();
-//			System.out.println(auxNode.toString2());
-//		}
-//		System.out.println("Time for the Linked List = " + finalTimeList + "ns");
-//		System.out.println("Time for the Priority Queue = " + finalTimeQueue + "ns");
-//		if(finalTimeList < finalTimeQueue)
-//			System.out.println("The best option is to use a Linked List");
-//		else
-//			System.out.println("The best option is to use a Priority Queue");
-//	}
+	//	public static void compareOrderingTime(){
+	//		Long initialTime, finalTimeList, finalTimeQueue;
+	//		int size;
+	//		Node parent = new Node(f);
+	//		Node auxNode;
+	//		Frontier frontList = new Frontier();
+	//		Frontier frontQueue = new Frontier();
+	//		StateSpace action = new StateSpace();
+	//		List<Node> actionList;
+	//		actionList = action.successors(parent, m, t, f);
+	//
+	//		//Ordering List
+	//		frontList.createFrontierList();
+	//
+	//		initialTime = System.nanoTime();
+	//		for(int i = 0; i < actionList.size(); i++){
+	//			auxNode = actionList.get(i);
+	//			frontList.insertInList(auxNode);
+	//
+	//		}
+	//		finalTimeList = System.nanoTime() - initialTime;
+	//		System.out.println("Linked list");
+	//		for(int i = 0; i < frontList.getFrontierList().size(); i++){
+	//			auxNode = frontList.getFrontierList().get(i);
+	//			System.out.println(auxNode.toString2());
+	//
+	//		}
+	//
+	//		//Ordering Queue
+	//		frontQueue.createFrontierQueue();
+	//		initialTime = System.nanoTime();
+	//		for(int i = 0; i < actionList.size(); i++){
+	//			auxNode = actionList.get(i);
+	//			frontQueue.insertInQueue(auxNode);
+	//		}
+	//		finalTimeQueue = System.nanoTime() - initialTime;
+	//		System.out.println("Priority Queue");
+	//		size = frontQueue.getFrontierQueue().size();
+	//		for(int i = 0; i < size; i++){
+	//			auxNode = frontQueue.getFrontierQueue().remove();
+	//			System.out.println(auxNode.toString2());
+	//		}
+	//		System.out.println("Time for the Linked List = " + finalTimeList + "ns");
+	//		System.out.println("Time for the Priority Queue = " + finalTimeQueue + "ns");
+	//		if(finalTimeList < finalTimeQueue)
+	//			System.out.println("The best option is to use a Linked List");
+	//		else
+	//			System.out.println("The best option is to use a Priority Queue");
+	//	}
 
 	private static void strategySelection() throws IOException {
-	    int strategy, option;
-	    boolean optimization = true;
-	    Long initialTime, finalTime;
-	    String route = "Solution.txt";
-	    File file = new File(route);
-	    BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-	    StateSpace stateSpace = new StateSpace();
-	    List<Node> solution = new ArrayList<Node>();
-	    Problem prob = new Problem(stateSpace, f, k);
-	    scan = new Scanner(System.in);
-	    
-	    System.out.println("\nWould you like to use optimization? - (Use: 1 for yes || 2 for no)");
-	    option = scan.nextInt();
-	    if(option == 1)
-	      optimization = true;
-	    else
-	      optimization = false;
-	    
-	    System.out.println("\n- Strategies -\n"
-	        + "1. Breath-first search\n"
-	        + "2. Depth-first search\n"
-	        + "3. Depth-limit search\n"
-	        + "4. Iterative-depth search\n"
-	        + "5. Uniform-cost search\n"
-	        + "6. A* search\n");
+		int strategy, option;
+		boolean optimization = true;
+		Long initialTime, finalTime;
+		String route = "Solution.txt";
+		File file = new File(route);
+		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+		StateSpace stateSpace = new StateSpace();
+		List<Node> solution = new ArrayList<Node>();
+		Problem prob = new Problem(stateSpace, f, k);
+		scan = new Scanner(System.in);
 
-	    
-	///////////////////////////////////////////////Meter lmite/////////////////////////////////////////////////
-	    strategy = scan.nextInt();
-	    
-	    
-	    
-	    switch (strategy) {
+		System.out.println("\nWould you like to use optimization? - (Use: 1 for yes || 2 for no)");
+		option = scan.nextInt();
+		if(option == 1)
+			optimization = true;
+		else
+			optimization = false;
 
-	    case 1:
-	      initialTime = System.nanoTime();
-	      solution = boundedSearch(prob, strategy, 20, optimization);
-	      printSolution(solution, bw);
-	      finalTime = (System.nanoTime() - initialTime) / 1000000000;
-	      System.out.println("The temporal complexity for BFS is: " + finalTime + " seconds.");
-	      bw.write("The temporal complexity for BFS is: " + finalTime + " seconds.");
-	      bw.newLine();
-	      break;
+		System.out.println("\n- Strategies -\n"
+				+ "1. Breath-first search\n"
+				+ "2. Depth-first search\n"
+				+ "3. Depth-limit search\n"
+				+ "4. Iterative-depth search\n"
+				+ "5. Uniform-cost search\n"
+				+ "6. A* search\n");
+		strategy = scan.nextInt();
+		
+		switch (strategy) {
+		case 1:
+			initialTime = System.nanoTime();
+			solution = boundedSearch(prob, strategy, 20, optimization);
+			printSolution(solution, bw);
+			finalTime = (System.nanoTime() - initialTime) / 1000000000;
+			System.out.println("The temporal complexity for BFS is: " + finalTime + " seconds.");
+			bw.write("The temporal complexity for BFS is: " + finalTime + " seconds.");
+			bw.newLine();
+			break;
 
-	    case 2:
-	      initialTime = System.nanoTime();
-	      solution = boundedSearch(prob, strategy, 20, optimization);
-	      printSolution(solution, bw);
-	      finalTime = (System.nanoTime() - initialTime) / 1000000000;
-	      System.out.println("The temporal complexity for DFS is: " + finalTime + " seconds.");
-	      bw.write("The temporal complexity for DFS is: " + finalTime + " seconds.");
-	      bw.newLine();
-	      break;
-	      
-	    case 3:
-	      System.out.println("Type the maximum depth");
-	      int maxDepth = scan.nextInt();
-	      initialTime = System.nanoTime();
-	      solution = boundedSearch(prob, strategy, maxDepth, optimization);
-	      printSolution(solution, bw);
-	      finalTime = (System.nanoTime() - initialTime) / 1000000000;
-	      System.out.println("The temporal complexity for DLS is: " + finalTime + " seconds.");
-	      bw.write("The temporal complexity for DLS is: " + finalTime + " seconds.");
-	      bw.newLine();
-	      break;
-	      
-	    case 4:
-	      System.out.println("Type the incrementally depth");
-	      int incDepth = scan.nextInt();
-	      initialTime = System.nanoTime();
-	      solution = search(prob, strategy, 20, incDepth, optimization);
-	      printSolution(solution, bw);
-	      finalTime = (System.nanoTime() - initialTime) / 1000000000;
-	      System.out.println("The temporal complexity for IDS is: " + finalTime + " seconds.");
-	      bw.write("The temporal complexity for IDS is: " + finalTime + " seconds.");
-	      bw.newLine();
-	      break;
+		case 2:
+			initialTime = System.nanoTime();
+			solution = boundedSearch(prob, strategy, 20, optimization);
+			printSolution(solution, bw);
+			finalTime = (System.nanoTime() - initialTime) / 1000000000;
+			System.out.println("The temporal complexity for DFS is: " + finalTime + " seconds.");
+			bw.write("The temporal complexity for DFS is: " + finalTime + " seconds.");
+			bw.newLine();
+			break;
 
-	    case 5:
-	      initialTime = System.nanoTime();
-	      solution = boundedSearch(prob, strategy, 20, optimization);
-	      printSolution(solution, bw);
-	      finalTime = (System.nanoTime() - initialTime) / 1000000000;
-	      System.out.println("The temporal complexity for UCS is: " + finalTime + " seconds.");
-	      bw.write("The temporal complexity for UCS is: " + finalTime + " seconds.");
-	      bw.newLine();
-	      break;
-	      
-	    case 6:
-	      initialTime = System.nanoTime();
-	      solution = boundedSearch(prob, strategy, 20, optimization);
-	      printSolution(solution, bw);
-	      finalTime = (System.nanoTime() - initialTime) / 1000000000;
-	      System.out.println("The temporal complexity for A* is: " + finalTime + " seconds.");
-	      bw.write("The temporal complexity for A* is: " + finalTime + " seconds.");
-	      bw.newLine();
-	      break;
+		case 3:
+			System.out.println("Type the maximum depth");
+			int maxDepth = scan.nextInt();
+			initialTime = System.nanoTime();
+			solution = boundedSearch(prob, strategy, maxDepth, optimization);
+			printSolution(solution, bw);
+			finalTime = (System.nanoTime() - initialTime) / 1000000000;
+			System.out.println("The temporal complexity for DLS is: " + finalTime + " seconds.");
+			bw.write("The temporal complexity for DLS is: " + finalTime + " seconds.");
+			bw.newLine();
+			break;
 
-	    default:        
-	      System.out.println("Wrong character! Type a number from 1 to 3.");
-	      strategySelection();
+		case 4:
+			System.out.println("Type the incrementally depth");
+			int incDepth = scan.nextInt();
+			initialTime = System.nanoTime();
+			solution = search(prob, strategy, 20, incDepth, optimization);
+			printSolution(solution, bw);
+			finalTime = (System.nanoTime() - initialTime) / 1000000000;
+			System.out.println("The temporal complexity for IDS is: " + finalTime + " seconds.");
+			bw.write("The temporal complexity for IDS is: " + finalTime + " seconds.");
+			bw.newLine();
+			break;
 
-	    }
+		case 5:
+			initialTime = System.nanoTime();
+			solution = boundedSearch(prob, strategy, 20, optimization);
+			printSolution(solution, bw);
+			finalTime = (System.nanoTime() - initialTime) / 1000000000;
+			System.out.println("The temporal complexity for UCS is: " + finalTime + " seconds.");
+			bw.write("The temporal complexity for UCS is: " + finalTime + " seconds.");
+			bw.newLine();
+			break;
 
-	    bw.close();  
-	  }
+		case 6:
+			initialTime = System.nanoTime();
+			solution = boundedSearch(prob, strategy, 20, optimization);
+			printSolution(solution, bw);
+			finalTime = (System.nanoTime() - initialTime) / 1000000000;
+			System.out.println("The temporal complexity for A* is: " + finalTime + " seconds.");
+			bw.write("The temporal complexity for A* is: " + finalTime + " seconds.");
+			bw.newLine();
+			break;
+
+		default:        
+			System.out.println("Wrong character! Type a number from 1 to 3.");
+			strategySelection();
+		}
+		bw.close();  
+	}
 
 	private static List<Node> boundedSearch(Problem prob, int strategy, int maxDepth, boolean opt){
 		boolean solution = false;
@@ -265,16 +249,17 @@ public class Main {
 		StateSpace initialAction = new StateSpace();
 		Movement moves = new Movement(tractorPosition);
 		Node initialNode = new Node(parent, prob.getField(), strategy, initialAction);
-		initialNode.setDepth(0);
-		initialNode.setValue(0);
 		initialNode.getAction().setMoves(moves);
 		initialNode.getAction().getMoves().setVertical(x);
 		initialNode.getAction().getMoves().setHorizontal(y);
 		List<Node> successorList = new ArrayList<Node>();
 		front.insertInQueue(initialNode);
-		
+
 		while(solution == false && !front.isEmptyQueue()){
-			actual = front.getFrontierQueue().remove();
+			if(opt) 
+				actual = optimization(actual, front,strategy);
+			else
+				actual = front.getFrontierQueue().remove();
 			if(prob.isGoalState(actual.getState())){
 				solution = true;
 			}
@@ -298,10 +283,49 @@ public class Main {
 			return createSolution(actual);
 		else
 			return null;
-		
-		
+
+
 	}
 	
+	public static Node optimization(Node actual, Frontier front, int strategy) {
+		boolean inserted = true, visitNode = true;
+		while(visitNode) {
+			inserted = true;
+			actual = front.getFrontierQueue().remove();
+			if(hashTable.isEmpty()) {
+				if(strategy == 1 || strategy == 2 || strategy == 3 || strategy == 4)
+					hashTable.put(actual.getState(), actual.getCost());
+				else
+					hashTable.put(actual.getState(), actual.getValue());
+				visitNode = false;
+			}else{
+				Enumeration<Field> num = hashTable.keys();
+				try {
+					while((num.nextElement() != null) && inserted) {
+						if(hashTable.containsKey(actual.getState())) {
+							if(strategy == 1 || strategy == 2 || strategy == 3 || strategy == 4) {
+								if(actual.getValue() < hashTable.get(actual.getState())) 
+									hashTable.replace(actual.getState(), actual.getCost());
+							}else
+								if(actual.getCost() < hashTable.get(actual.getState())) 
+									hashTable.replace(actual.getState(), actual.getCost());						
+
+							inserted = false;
+						}
+					}//end while(num.hasMoreElements() && inserted)
+				}catch(NoSuchElementException e) {}
+				if(inserted) {
+					if(strategy == 1 || strategy == 2 || strategy == 3 || strategy == 4)
+						hashTable.put(actual.getState(), actual.getCost());
+					else
+						hashTable.put(actual.getState(), actual.getValue());
+					visitNode = false;
+				}//end if(inserted)
+			}//end else
+		}
+		return actual;
+	}
+
 	public static List<Node> search(Problem prob, int strategy, int maxDepth, int incDepth, boolean opt) {
 		int actualDepth = incDepth;
 		List<Node> solution = new ArrayList<Node>();
@@ -310,9 +334,9 @@ public class Main {
 			actualDepth += incDepth;
 		}
 		return solution;
-		
+
 	}
-	
+
 	public static List<Node> createSolution(Node actual){
 		List<Node> solution = new ArrayList<Node>();
 		while(actual.getParent() != null && solution != null) {
@@ -321,7 +345,7 @@ public class Main {
 		}
 		return solution;
 	}
-	
+
 	public static void printSolution(List<Node> solution, BufferedWriter bw) throws IOException {
 		Node auxNode;
 		Field newField, auxField = null;
@@ -354,12 +378,12 @@ public class Main {
 					bw.write("|" + fieldArray[j][k]);
 				}
 				bw.write("|");
-		        bw.newLine();
+				bw.newLine();
 				System.out.print("|\n");
 			}
 			System.out.println();
 			bw.newLine();
-			
+
 			auxField = newField;
 			auxMovement = auxNode.getAction().getMoves();
 		}
@@ -374,7 +398,7 @@ public class Main {
 		bw.write("Spatial complexity: " + spatialComplexity);
 		bw.newLine();
 	}
-	
+
 	public static String solutionActions(Field parentField, Field currentField, Movement parentPosition) {
 		int vertical = parentPosition.getVertical();
 		int horizontal = parentPosition.getHorizontal();
@@ -402,7 +426,7 @@ public class Main {
 			childSand = currentField.getField()[parentPosition.getSouthMovement(moves, parentField)[0]][parentPosition.getSouthMovement(moves, parentField)[1]];
 			southSand = childSand - parentSand;	
 		}
-			
+
 		return "\nAction [northSand=" + northSand + ", westSand=" + westSand + ", eastSand=" + eastSand + ", southSand="
 		+ southSand + "]";
 	}

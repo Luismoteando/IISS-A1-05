@@ -15,11 +15,13 @@ public class Node implements Comparable<Node>{
 		this.parent = parent;
 		this.state = state;
 		this.action = action;
-		if(parent.getParent() == null)
+		if(parent.getParent() == null) {
 			this.cost = 0;
-		else
+			this.depth = 0;
+		}else {
 			this.cost = parent.getCost() + action.totalSand() + 1;
-		this.depth = parent.getDepth() + 1;
+			this.depth = parent.getDepth() + 1;
+		}
 		if(strategy == 1)
 			this.value = depth;
 		if(strategy == 2 || strategy == 3 || strategy == 4)
@@ -31,10 +33,6 @@ public class Node implements Comparable<Node>{
 	}
 	
 	public int heuristic() {
-		//Define if the visited list is of states or nodes (nodes need more bytes)
-		//When inserting nodes, we have to compare if the frontier already have the state and compare the values taking the best one
-		//the cost for A* and UCS must be the same
-		//the time of A* is less that the UCS one
 		int heuristic = 0;
 		int[][] field = state.getField();
 		for (int i=0; i < field.length; i++) {

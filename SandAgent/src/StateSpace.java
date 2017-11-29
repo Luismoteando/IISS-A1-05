@@ -184,8 +184,9 @@ public class StateSpace {
 				auxAction2 = new StateSpace(auxMovement, auxAction.getActions().get(j));
 				auxField = fieldList.get(j);
 				node = new Node(parent, auxField, strategy, auxAction2);
-				if(node.getDepth() <= maxDepth)
-					successors.add(node);			
+				if(node.getDepth() <= maxDepth) {			
+						successors.add(node);					
+				}
 			}
 		}
 
