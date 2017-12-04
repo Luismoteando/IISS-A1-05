@@ -1,7 +1,7 @@
 import java.util.*;
 
 //Leave sand
-public class StateSpace {
+public class StateSpace{
 	private int northSand, westSand, eastSand, southSand;
 	private Movement move;
 	private StateSpace singleAction;

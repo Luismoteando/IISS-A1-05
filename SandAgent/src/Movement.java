@@ -1,5 +1,5 @@
 
-public class Movement {
+public class Movement{
 	
 	private int vertical, horizontal;
 

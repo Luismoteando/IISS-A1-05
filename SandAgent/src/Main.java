@@ -7,7 +7,7 @@ public class Main {
 	private static Scanner scan;
 	private static Field f;
 	private static int spatialComplexity;
-	static Hashtable<Field, Integer> hashTable = new Hashtable<Field, Integer>();
+	static Hashtable<String, Integer> hashTable = new Hashtable<String, Integer>();
 
 	public static void main(String[] args) throws IOException{
 
@@ -166,7 +166,7 @@ public class Main {
 				+ "5. Uniform-cost search\n"
 				+ "6. A* search\n");
 		strategy = scan.nextInt();
-		
+
 		switch (strategy) {
 		case 1:
 			initialTime = System.nanoTime();
@@ -255,11 +255,14 @@ public class Main {
 		List<Node> successorList = new ArrayList<Node>();
 		front.insertInQueue(initialNode);
 
-		while(solution == false && !front.isEmptyQueue()){
-			if(opt) 
-				actual = optimization(actual, front,strategy);
-			else
-				actual = front.getFrontierQueue().remove();
+		while(solution == false && !front.isEmptyQueue()){ 		
+			actual = front.getFrontierQueue().remove();
+			if(opt)
+				while(!optimization(actual, strategy)) {
+					actual = front.getFrontierQueue().remove();
+					spatialComplexity--;
+				}
+			
 			if(prob.isGoalState(actual.getState())){
 				solution = true;
 			}
@@ -273,8 +276,14 @@ public class Main {
 				}
 				successorList = prob.successors(actual, actual.getState(), actual.getAction().getMoves(), tractorPosition, strategy, maxDepth);
 				for(int i = 0; i < successorList.size(); i++) {
-					spatialComplexity++;
-					front.insertInQueue(successorList.get(i));
+//					if(opt) {
+//						if(optimization(successorList.get(i), strategy))
+//							spatialComplexity++;
+//							front.insertInQueue(successorList.get(i));
+//					}else {
+						spatialComplexity++;
+						front.insertInQueue(successorList.get(i));
+//					}
 				}
 			}
 		}
@@ -287,43 +296,29 @@ public class Main {
 
 	}
 	
-	public static Node optimization(Node actual, Frontier front, int strategy) {
-		boolean inserted = true, visitNode = true;
-		while(visitNode) {
-			inserted = true;
-			actual = front.getFrontierQueue().remove();
-			if(hashTable.isEmpty()) {
-				if(strategy == 1 || strategy == 2 || strategy == 3 || strategy == 4)
-					hashTable.put(actual.getState(), actual.getCost());
-				else
-					hashTable.put(actual.getState(), actual.getValue());
-				visitNode = false;
-			}else{
-				Enumeration<Field> num = hashTable.keys();
-				try {
-					while((num.nextElement() != null) && inserted) {
-						if(hashTable.containsKey(actual.getState())) {
-							if(strategy == 1 || strategy == 2 || strategy == 3 || strategy == 4) {
-								if(actual.getValue() < hashTable.get(actual.getState())) 
-									hashTable.replace(actual.getState(), actual.getCost());
-							}else
-								if(actual.getCost() < hashTable.get(actual.getState())) 
-									hashTable.replace(actual.getState(), actual.getCost());						
-
-							inserted = false;
-						}
-					}//end while(num.hasMoreElements() && inserted)
-				}catch(NoSuchElementException e) {}
-				if(inserted) {
-					if(strategy == 1 || strategy == 2 || strategy == 3 || strategy == 4)
-						hashTable.put(actual.getState(), actual.getCost());
-					else
-						hashTable.put(actual.getState(), actual.getValue());
-					visitNode = false;
-				}//end if(inserted)
-			}//end else
+	private static boolean optimization(Node actual, int strategy) {
+		String serialize = actual.serialize();
+		
+		if(!hashTable.containsKey(serialize)) {
+			if(strategy == 1 || strategy == 2 || strategy == 3 || strategy == 4)
+				hashTable.put(serialize, actual.getCost());
+			else
+				hashTable.put(serialize, actual.getValue());
+			return true;
+		}else {
+			if(strategy == 1 || strategy == 2 || strategy == 3 || strategy == 4) 
+				if(hashTable.get(serialize) > actual.getCost()) {
+					hashTable.replace(serialize, actual.getCost());
+					return true;									
+				}else
+					return false;
+			else
+				if(hashTable.get(serialize) > actual.getValue()) {
+					hashTable.replace(serialize, actual.getValue());
+					return true;									
+				}else
+					return false;
 		}
-		return actual;
 	}
 
 	public static List<Node> search(Problem prob, int strategy, int maxDepth, int incDepth, boolean opt) {
@@ -388,10 +383,10 @@ public class Main {
 			auxMovement = auxNode.getAction().getMoves();
 		}
 
-		System.out.println("Total depth of the search: " + (solution.get(0).getDepth() + 1));
+		System.out.println("Total depth of the search: " + solution.get(0).getDepth());
 		System.out.println("Total cost of the search: " + solution.get(0).getCost());
 		System.out.println("Spatial complexity: " + spatialComplexity);
-		bw.write("Total depth of the search: " + (solution.get(0).getDepth() + 1));
+		bw.write("Total depth of the search: " + solution.get(0).getDepth());
 		bw.newLine();
 		bw.write("Total cost of the search: " + solution.get(0).getCost());
 		bw.newLine();
@@ -432,7 +427,4 @@ public class Main {
 	}
 
 }//end Main
-
-
-
 

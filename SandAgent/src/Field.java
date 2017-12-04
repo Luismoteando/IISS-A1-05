@@ -1,5 +1,5 @@
 
-public class Field {
+public class Field{
 
 	private int column, row, k, max;
 	private int [][] field;

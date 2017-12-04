@@ -1,3 +1,6 @@
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 public class Node implements Comparable<Node>{
 
@@ -42,6 +45,15 @@ public class Node implements Comparable<Node>{
 			}
 		}
 		return heuristic;		
+	}
+	
+	public String serialize() {
+		String ID = "$" + this.getAction().getMoves() + "#";
+		
+		for(int i = 0; i < state.getField().length; i++)
+			for(int j = 0; j < state.getField()[i].length; j++)
+				ID += state.getField()[i][j];
+		return ID;
 	}
 	
 	public int compareTo(Node node){
