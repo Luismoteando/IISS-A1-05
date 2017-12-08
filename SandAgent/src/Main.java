@@ -1,6 +1,10 @@
 import java.io.*;
 import java.util.*;
-
+/**
+ * 
+ * @author Lydia Prado
+ *
+ */
 public class Main {
 	private static int x = 0, y = 0, k = 0, max = 0, column = 0,row = 0;
 	private static int [][] field;
@@ -11,12 +15,7 @@ public class Main {
 
 	public static void main(String[] args) throws IOException{
 
-		storeValues();
-
-		if(field.length != row || field[0].length != column){
-			System.out.println("The length of the field doesn't correspond to the number of columns or rows");
-			System.exit(0);
-		}//end if
+		storeValues();	
 
 		System.out.println("Position of the tractor: [" + x + ", " + y + "]\n"
 				+ "Optimum amount of sand per square (k): " + k + "\n"
@@ -26,7 +25,6 @@ public class Main {
 		printField();
 
 		f = new Field(column, row, field, k, max);
-		//		printSand();
 		strategySelection();
 
 	}//end main
@@ -45,16 +43,20 @@ public class Main {
 				row = scan.nextInt();
 				field= new int[column][row];
 			}catch(Exception e){
-				System.out.println("Error. There're invalid values.");
+				System.out.println("\nError. There're invalid values.");
 				System.exit(0);
 			}
+			if(field.length != row || field[0].length != column){
+				System.out.println("The length of the field doesn't correspond to the number of columns or rows.");
+				System.exit(0);
+			}//end if	
 			aux = true;
 		}while(!aux);
 
 	}//end storeValues
 
 	public static void printField(){
-
+		double sum  = 0, total = 0;
 		scan.nextLine();
 		System.out.println("Distribution of the field:");
 
@@ -63,81 +65,26 @@ public class Main {
 				try{
 					field[i][j] = scan.nextInt();
 					if(field[i][j] > max){
-						System.out.println("\nThere's a cell of the field with more quantity of sand than the max required.");
+						System.out.println("\nThe cell [" + i + ", " + j + "] exceeds the maximum amount of possible sand.");
 						System.exit(0);
 					}
 				}catch(Exception e){
-					System.out.println("Error. There're invalid values.");
+					System.out.println("\nError. There're invalid values in cell [" + i + ", " + j + "]");
 					System.exit(0);
 				}
 				System.out.print("|" + field[i][j]);									
 			}//end for
 			System.out.print("|\n");
 		}//end for
+		for(int i  = 0; i< field.length; i++) 
+			for(int j = 0; j < field[0].length; j++) 
+				sum += field[i][j];
+		total = sum / (row * column);
+		if(total != k) {
+			System.out.println("This field has no possible solution.");
+			System.exit(0);
+		}
 	}//end printField
-
-	//	public static void printSand(){
-	//		System.out.println("\nList of successors:");
-	//
-	//		if(x != 0)
-	//			System.out.println("North: " + "[" + m.getNorthMovement(t)[0] + ", " + m.getNorthMovement(t)[1] + "]" + " // Sand amount: " + f.getField()[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]]);
-	//		if(y != 0)
-	//			System.out.println("West: " + "[" + m.getWestMovement(t)[0] + ", " + m.getWestMovement(t)[1] + "]" + " // Sand amount: " + f.getField()[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]]);
-	//		if(y != column - 1)
-	//			System.out.println("East: " + "[" + m.getEastMovement(t, f)[0] + ", " + m.getEastMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]]);
-	//		if(x != row - 1)
-	//			System.out.println("South: " + "[" + m.getSouthMovement(t, f)[0] + ", " + m.getSouthMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]]);
-	//	}//end printSand
-
-	//	public static void compareOrderingTime(){
-	//		Long initialTime, finalTimeList, finalTimeQueue;
-	//		int size;
-	//		Node parent = new Node(f);
-	//		Node auxNode;
-	//		Frontier frontList = new Frontier();
-	//		Frontier frontQueue = new Frontier();
-	//		StateSpace action = new StateSpace();
-	//		List<Node> actionList;
-	//		actionList = action.successors(parent, m, t, f);
-	//
-	//		//Ordering List
-	//		frontList.createFrontierList();
-	//
-	//		initialTime = System.nanoTime();
-	//		for(int i = 0; i < actionList.size(); i++){
-	//			auxNode = actionList.get(i);
-	//			frontList.insertInList(auxNode);
-	//
-	//		}
-	//		finalTimeList = System.nanoTime() - initialTime;
-	//		System.out.println("Linked list");
-	//		for(int i = 0; i < frontList.getFrontierList().size(); i++){
-	//			auxNode = frontList.getFrontierList().get(i);
-	//			System.out.println(auxNode.toString2());
-	//
-	//		}
-	//
-	//		//Ordering Queue
-	//		frontQueue.createFrontierQueue();
-	//		initialTime = System.nanoTime();
-	//		for(int i = 0; i < actionList.size(); i++){
-	//			auxNode = actionList.get(i);
-	//			frontQueue.insertInQueue(auxNode);
-	//		}
-	//		finalTimeQueue = System.nanoTime() - initialTime;
-	//		System.out.println("Priority Queue");
-	//		size = frontQueue.getFrontierQueue().size();
-	//		for(int i = 0; i < size; i++){
-	//			auxNode = frontQueue.getFrontierQueue().remove();
-	//			System.out.println(auxNode.toString2());
-	//		}
-	//		System.out.println("Time for the Linked List = " + finalTimeList + "ns");
-	//		System.out.println("Time for the Priority Queue = " + finalTimeQueue + "ns");
-	//		if(finalTimeList < finalTimeQueue)
-	//			System.out.println("The best option is to use a Linked List");
-	//		else
-	//			System.out.println("The best option is to use a Priority Queue");
-	//	}
 
 	private static void strategySelection() throws IOException {
 		int strategy, option;
@@ -238,6 +185,14 @@ public class Main {
 		}
 		bw.close();  
 	}
+	/**
+	 * 
+	 * @param prob
+	 * @param strategy
+	 * @param maxDepth
+	 * @param opt
+	 * @return 
+	 */
 
 	private static List<Node> boundedSearch(Problem prob, int strategy, int maxDepth, boolean opt){
 		boolean solution = false;
@@ -256,65 +211,64 @@ public class Main {
 		front.insertInQueue(initialNode);
 
 		while(solution == false && !front.isEmptyQueue()){ 		
-			actual = front.getFrontierQueue().remove();
-			if(opt)
-				while(!optimization(actual, strategy)) {
-					actual = front.getFrontierQueue().remove();
-					spatialComplexity--;
-				}
-			
+			actual = front.getFrontierQueue().remove();			
 			if(prob.isGoalState(actual.getState())){
 				solution = true;
-			}
+			}//end if
 			else{
-				if(actual == initialNode) {
-					tractorPosition[0] = x;
-					tractorPosition[1] = y;
-				}else {
-					tractorPosition[0] = actual.getAction().getMoves().getVertical();
-					tractorPosition[1] = actual.getAction().getMoves().getHorizontal();
-				}
+				tractorPosition = evaluateTractorPosition(actual, initialNode);
 				successorList = prob.successors(actual, actual.getState(), actual.getAction().getMoves(), tractorPosition, strategy, maxDepth);
 				for(int i = 0; i < successorList.size(); i++) {
-//					if(opt) {
-//						if(optimization(successorList.get(i), strategy))
-//							spatialComplexity++;
-//							front.insertInQueue(successorList.get(i));
-//					}else {
+					if(opt) {
+						if(optimization(successorList.get(i), strategy)) {
+							spatialComplexity++;
+							front.insertInQueue(successorList.get(i));
+						}//end if
+					}else {
 						spatialComplexity++;
 						front.insertInQueue(successorList.get(i));
-//					}
-				}
-			}
-		}
+					}//end if
+				}//end for
+			}//end if
+		}//end while
 
 		if(solution)
 			return createSolution(actual);
 		else
 			return null;
-
-
+	}// end boundedSearch
+	
+	public static int[] evaluateTractorPosition(Node actual, Node initialNode) {
+		int[] tractorPosition = new int[2];
+		if(actual == initialNode) {
+			tractorPosition[0] = x;
+			tractorPosition[1] = y;
+		}else {
+			tractorPosition[0] = actual.getAction().getMoves().getVertical();
+			tractorPosition[1] = actual.getAction().getMoves().getHorizontal();
+		}
+		return tractorPosition;
 	}
 	
-	private static boolean optimization(Node actual, int strategy) {
-		String serialize = actual.serialize();
+	private static boolean optimization(Node possibleSuccessor, int strategy) {
+		String serialize = possibleSuccessor.serialize();
 		
 		if(!hashTable.containsKey(serialize)) {
 			if(strategy == 1 || strategy == 2 || strategy == 3 || strategy == 4)
-				hashTable.put(serialize, actual.getCost());
+				hashTable.put(serialize, possibleSuccessor.getCost());
 			else
-				hashTable.put(serialize, actual.getValue());
+				hashTable.put(serialize, possibleSuccessor.getValue());
 			return true;
 		}else {
 			if(strategy == 1 || strategy == 2 || strategy == 3 || strategy == 4) 
-				if(hashTable.get(serialize) > actual.getCost()) {
-					hashTable.replace(serialize, actual.getCost());
+				if(hashTable.get(serialize) > possibleSuccessor.getCost()) {
+					hashTable.replace(serialize, possibleSuccessor.getCost());
 					return true;									
 				}else
 					return false;
 			else
-				if(hashTable.get(serialize) > actual.getValue()) {
-					hashTable.replace(serialize, actual.getValue());
+				if(hashTable.get(serialize) > possibleSuccessor.getValue()) {
+					hashTable.replace(serialize, possibleSuccessor.getValue());
 					return true;									
 				}else
 					return false;
@@ -425,6 +379,69 @@ public class Main {
 		return "\nAction [northSand=" + northSand + ", westSand=" + westSand + ", eastSand=" + eastSand + ", southSand="
 		+ southSand + "]";
 	}
+	
+	//	public static void printSand(){
+	//		System.out.println("\nList of successors:");
+	//
+	//		if(x != 0)
+	//			System.out.println("North: " + "[" + m.getNorthMovement(t)[0] + ", " + m.getNorthMovement(t)[1] + "]" + " // Sand amount: " + f.getField()[m.getNorthMovement(t)[0]][m.getNorthMovement(t)[1]]);
+	//		if(y != 0)
+	//			System.out.println("West: " + "[" + m.getWestMovement(t)[0] + ", " + m.getWestMovement(t)[1] + "]" + " // Sand amount: " + f.getField()[m.getWestMovement(t)[0]][m.getWestMovement(t)[1]]);
+	//		if(y != column - 1)
+	//			System.out.println("East: " + "[" + m.getEastMovement(t, f)[0] + ", " + m.getEastMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getEastMovement(t, f)[0]][m.getEastMovement(t, f)[1]]);
+	//		if(x != row - 1)
+	//			System.out.println("South: " + "[" + m.getSouthMovement(t, f)[0] + ", " + m.getSouthMovement(t, f)[1] + "]" + " // Sand amount: " + f.getField()[m.getSouthMovement(t, f)[0]][m.getSouthMovement(t, f)[1]]);
+	//	}//end printSand
+
+	//	public static void compareOrderingTime(){
+	//		Long initialTime, finalTimeList, finalTimeQueue;
+	//		int size;
+	//		Node parent = new Node(f);
+	//		Node auxNode;
+	//		Frontier frontList = new Frontier();
+	//		Frontier frontQueue = new Frontier();
+	//		StateSpace action = new StateSpace();
+	//		List<Node> actionList;
+	//		actionList = action.successors(parent, m, t, f);
+	//
+	//		//Ordering List
+	//		frontList.createFrontierList();
+	//
+	//		initialTime = System.nanoTime();
+	//		for(int i = 0; i < actionList.size(); i++){
+	//			auxNode = actionList.get(i);
+	//			frontList.insertInList(auxNode);
+	//
+	//		}
+	//		finalTimeList = System.nanoTime() - initialTime;
+	//		System.out.println("Linked list");
+	//		for(int i = 0; i < frontList.getFrontierList().size(); i++){
+	//			auxNode = frontList.getFrontierList().get(i);
+	//			System.out.println(auxNode.toString2());
+	//
+	//		}
+	//
+	//		//Ordering Queue
+	//		frontQueue.createFrontierQueue();
+	//		initialTime = System.nanoTime();
+	//		for(int i = 0; i < actionList.size(); i++){
+	//			auxNode = actionList.get(i);
+	//			frontQueue.insertInQueue(auxNode);
+	//		}
+	//		finalTimeQueue = System.nanoTime() - initialTime;
+	//		System.out.println("Priority Queue");
+	//		size = frontQueue.getFrontierQueue().size();
+	//		for(int i = 0; i < size; i++){
+	//			auxNode = frontQueue.getFrontierQueue().remove();
+	//			System.out.println(auxNode.toString2());
+	//		}
+	//		System.out.println("Time for the Linked List = " + finalTimeList + "ns");
+	//		System.out.println("Time for the Priority Queue = " + finalTimeQueue + "ns");
+	//		if(finalTimeList < finalTimeQueue)
+	//			System.out.println("The best option is to use a Linked List");
+	//		else
+	//			System.out.println("The best option is to use a Priority Queue");
+	//	}
 
 }//end Main
 

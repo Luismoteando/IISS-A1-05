@@ -1,6 +1,3 @@
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 
 public class Node implements Comparable<Node>{
 
@@ -12,7 +9,6 @@ public class Node implements Comparable<Node>{
 	public Node(Field state){
 		this.state = state;
 	}
-
 	
 	public Node(Node parent, Field state, int strategy, StateSpace action){
 		this.parent = parent;
@@ -48,7 +44,7 @@ public class Node implements Comparable<Node>{
 	}
 	
 	public String serialize() {
-		String ID = "$" + this.getAction().getMoves() + "#";
+		String ID = "$" + this.getAction().getMoves().toString() + "#";
 		
 		for(int i = 0; i < state.getField().length; i++)
 			for(int j = 0; j < state.getField()[i].length; j++)
@@ -67,34 +63,22 @@ public class Node implements Comparable<Node>{
 	public Field getState() {
 		return state;
 	}
-	public void setState(Field state) {
-		this.state = state;
-	}
+	
 	public int getCost() {
 		return cost;
 	}
-	public void setCost(int cost) {
-		this.cost = cost;
-	}
+	
 	public int getDepth() {
 		return depth;
 	}
-	public void setDepth(int depth) {
-		this.depth = depth;
-	}
+
 	public int getValue() {
 		return value;
 	}
-	public void setValue(int value) {
-		this.value = value;
-	}
+
 	public StateSpace getAction() {
 		return action;
 	}
-	
-	public void setAction(StateSpace action) {
-		this.action = action;
-	}	
 	
 	public Node getParent() {
 		return parent;

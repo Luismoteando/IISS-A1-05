@@ -4,6 +4,7 @@ import java.util.*;
 public class StateSpace{
 	private int northSand, westSand, eastSand, southSand;
 	private Movement move;
+	@SuppressWarnings("unused")
 	private StateSpace singleAction;
 	private static List<StateSpace> actions;
 
@@ -21,7 +22,7 @@ public class StateSpace{
 
 	public StateSpace(Movement move, StateSpace singleAction){
 		this.move = move;
-		this.setSingleAction(singleAction);
+		this.singleAction = singleAction;
 	}
 
 	public StateSpace() {
@@ -29,8 +30,8 @@ public class StateSpace{
 
 	public static void generateActions(int[] tractorPosition, Field f, Movement m){
 		int[] elements = possibilities(tractorPosition, f);
-		int n = 4;                  //Tipos para escoger
-		int r = elements.length;   //Elementos elegidos
+		int n = 4;
+		int r = elements.length;
 		actions = new ArrayList<StateSpace>();
 
 		recursiveActions(elements, "", n, r, f, tractorPosition, m);
@@ -57,12 +58,6 @@ public class StateSpace{
 	public static int[] possibilities(int[] tractorPosition, Field f){
 		int difference;
 		difference = f.getDifference(tractorPosition);
-
-//		if(f.getField()[tractorPosition[0]][tractorPosition[1]] < f.getK()){
-////			System.out.println("Trying to move sand from a box that is lesser than 'k' (The desired quantity)");
-////			System.exit(0);
-//			difference = 0;
-//		}
 		int [] possibilities = new int[difference + 1];
 		for(int i = 0; i < possibilities.length; i++){
 			possibilities[i] = difference - i;
@@ -227,32 +222,16 @@ public class StateSpace{
 		return northSand;
 	}
 
-	public void setNorthSand(int northSand) {
-		this.northSand = northSand;
-	}
-
 	public int getWestSand() {
 		return westSand;
-	}
-
-	public void setWestSand(int westSand) {
-		this.westSand = westSand;
 	}
 
 	public int getEastSand() {
 		return eastSand;
 	}
 
-	public void setEastSand(int eastSand) {
-		this.eastSand = eastSand;
-	}
-
 	public int getSouthSand() {
 		return southSand;
-	}
-
-	public void setSouthSand(int southSand) {
-		this.southSand = southSand;
 	}
 
 	public Movement getMoves() {
@@ -266,33 +245,20 @@ public class StateSpace{
 	public List<StateSpace> getActions() {
 		return actions;
 	}
-
-	public static void setActions(List<StateSpace> actions) {
-		StateSpace.actions = actions;
-	}
-
-	public StateSpace getSingleAction() {
-		return singleAction;
-	}
-
-	public void setSingleAction(StateSpace singleAction) {
-		this.singleAction = singleAction;
-	}
-
-	public static void printActions(List<StateSpace> actionsWithMoves){
-		for(int i = 0; i < actionsWithMoves.size(); i++)
-			System.out.println(actionsWithMoves.get(i).printWithMoves() + "\n");
-	}
-
-	@Override
+	
 	public String toString() {
 		return "\nAction [northSand=" + northSand + ", westSand=" + westSand + ", eastSand=" + eastSand + ", southSand="
 				+ southSand + "]";
 	}
+
+//	public static void printActions(List<StateSpace> actionsWithMoves){
+//		for(int i = 0; i < actionsWithMoves.size(); i++)
+//			System.out.println(actionsWithMoves.get(i).printWithMoves() + "\n");
+//	}
 	
-	public String printWithMoves(){
-		return move.toString() + actions.toString();
-	}
+//	public String printWithMoves(){
+//		return move.toString() + actions.toString();
+//	}
 
 
 }

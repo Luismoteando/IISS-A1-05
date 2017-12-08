@@ -13,7 +13,6 @@ public class Field{
 		this.max = max;
 	}
 
-
 	//checks if the successors exist
 	public boolean checkSuccessors(int[] next, int[] tractorPosition, Movement m){
 		int x = tractorPosition[0];
@@ -52,10 +51,6 @@ public class Field{
 		return field;
 	}
 
-	public void setField(int[][] field) {
-		this.field = field;
-	}
-
 	public int getK(){
 		return k;
 	}
@@ -74,11 +69,8 @@ public class Field{
 		}
 		
 		return print;
-
 	}
-
-
-	@Override
+	
 	public String toString() {
 		return "Field [column=" + column + ", row=" + row + ", k=" + k + ", max=" + max + "\n" + ", field="
 				+ printField(field) + "]";
@@ -86,23 +78,6 @@ public class Field{
 
 	public String toString2(){
 		return printField(field);
-	}
-
-
-	public void setColumn(int column) {
-		this.column = column;		
-	}
-	
-	public void setRow(int row) {
-		this.row = row;
-	}
-	
-	public void setK(int k) {
-		this.k = k;
-	}
-	
-	public void setMax(int max) {
-		this.max = max;
 	}
 
 }
