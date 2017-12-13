@@ -1,4 +1,8 @@
-
+/**
+ * 
+ * @author Lydia Prado Ibáñez, Luis Miguel Ortiz Rozalén and Rubén Pérez Rubio
+ * Description: This class establishes the field for each state
+ */
 public class Field{
 
 	private int column, row, k, max;
@@ -13,6 +17,13 @@ public class Field{
 		this.max = max;
 	}
 
+	/**
+	 * Description: this method checks if the successors of the next movement exist, and discards possible actions that are not possible.
+	 * @param next Represents the array with the all possible permutations with repetition.
+	 * @param tractorPosition Represents the current position of the tractor.
+	 * @param m Represents the movement in which the tractor can go.
+	 * @return It returns a boolean value, depending on whether the successor is possible or not.
+	 */
 	//checks if the successors exist
 	public boolean checkSuccessors(int[] next, int[] tractorPosition, Movement m){
 		int x = tractorPosition[0];
@@ -30,15 +41,20 @@ public class Field{
 			return false;
 
 		return true;
-	}
-	
+	}	
 
+	/**
+	 * Description: it computes the difference between the current amount of sand and the desired amount 'k'.
+	 * @param tractorPosition Represents the current position of the tractor in the field.
+	 * @return It returns the difference that has been said previously.
+	 */
 	public int getDifference(int[] tractorPosition){
 		if((field[tractorPosition[0]][tractorPosition[1]] - k) < 0)
 			return 0;
 		return field[tractorPosition[0]][tractorPosition[1]] - k;
 	}
 
+	//getters and setters
 	public int getColumn() {
 		return column;
 	}
@@ -59,6 +75,11 @@ public class Field{
 		return max;
 	}
 
+	/**
+	 * Description: in this method, we any given field
+	 * @param field We pass the 2-dimension array to print it.
+	 * @return It returns a string representing the field.
+	 */
 	public String printField(int[][] field){
 		String print = "";
 		for(int i = 0; i < field.length; i++){
@@ -71,6 +92,7 @@ public class Field{
 		return print;
 	}
 	
+	//toStrings
 	public String toString() {
 		return "Field [column=" + column + ", row=" + row + ", k=" + k + ", max=" + max + "\n" + ", field="
 				+ printField(field) + "]";

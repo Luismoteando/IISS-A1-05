@@ -1,5 +1,10 @@
 import java.util.*;
 
+/**
+ * 
+ * @author Lydia Prado Ibáñez, Luis Miguel Ortiz Rozalén and Rubén Pérez Rubio
+ * Description: In this class, the data structure for the frontier is implemented. In this case, a priority queue is used.
+ */
 public class Frontier {
 	
 //	private LinkedList<Node> frontierList;

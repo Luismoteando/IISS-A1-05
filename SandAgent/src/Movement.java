@@ -1,4 +1,8 @@
-
+/**
+ * 
+ * @author Lydia Prado Ibáñez, Luis Miguel Ortiz Rozalén and Rubén Pérez Rubio
+ * Description: This class represents the movements that the tractor can effectuate in the given field.
+ */
 public class Movement{
 	
 	private int vertical, horizontal;
@@ -11,6 +15,11 @@ public class Movement{
 	public Movement() {
 	}
 
+	/**
+	 * Description: This method finds the position of the north successor
+	 * @param tractorPosition Array containing the current position of the tractor
+	 * @return It returns the position of the north successor
+	 */
 	public int[] getNorthMovement(int[] tractorPosition){
 		int x = tractorPosition[0];
 		int y = tractorPosition[1];
@@ -22,6 +31,11 @@ public class Movement{
 		return northSuccessor;
 	}
 	
+	/**
+	 * Description: This method finds the position of the west successor
+	 * @param tractorPosition Array containing the current position of the tractor
+	 * @return It returns the position of the west successor
+	 */
 	public int[] getWestMovement(int[] tractorPosition){
 		int x = tractorPosition[0];
 		int y = tractorPosition[1];
@@ -33,6 +47,12 @@ public class Movement{
 		return westSuccessor;
 	}
 	
+	/**
+	 * Description: This method finds the position of the east successor
+	 * @param tractorPosition Array containing the current position of the tractor
+	 * @param f We pass the field to identify the columns and rows  
+	 * @return It returns the position of the east successor
+	 */
 	public int[] getEastMovement(int[] tractorPosition, Field f){
 		int x = tractorPosition[0];
 		int y = tractorPosition[1];
@@ -44,6 +64,12 @@ public class Movement{
 		return eastSuccessor;
 	}
 	
+	/**
+	 * Description: This method finds the position of the south successor
+	 * @param tractorPosition Array containing the current position of the tractor
+	 * @param f We pass the field to identify the columns and rows  
+	 * @return It returns the position of the south successor
+	 */
 	public int[] getSouthMovement(int[] tractorPosition, Field f){
 		int x = tractorPosition[0];
 		int y = tractorPosition[1];
@@ -55,6 +81,7 @@ public class Movement{
 		return southSuccessor;
 	}
 	
+	//getters and setters
 	public int getVertical() {
 		return vertical;
 	}
@@ -63,16 +90,17 @@ public class Movement{
 		return horizontal;
 	}
 
-	public String toString() {
-		return "Movement [" + vertical + ", " + horizontal + "]";
-	}
-
 	public void setVertical(int x) {
 		this.vertical = x;
 	}
 
 	public void setHorizontal(int y) {
 		this.horizontal = y;		
+	}
+	
+	//toStrings
+	public String toString() {
+		return "Movement [" + vertical + ", " + horizontal + "]";
 	}
 
 }
